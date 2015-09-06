@@ -8,11 +8,23 @@
 
 #import "FJAppDelegate.h"
 
+#import <FluentJ/FluentJ.h>
+
+#import "User.h"
+#import "Item.h"
+
 @implementation FJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    NSString *filepath = [[NSBundle mainBundle] pathForResource:@"types" ofType:@"json"];
+    NSData *data = [NSData dataWithContentsOfFile:filepath];
+    NSError *error = nil;
+    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    
+    NSArray *items = [User importValues:json keys:@{@"firstName" : @"firstName"} error:nil];
+    NSLog(@"%@", items);
+    
     return YES;
 }
 
