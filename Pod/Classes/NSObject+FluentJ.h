@@ -13,8 +13,10 @@
 /**
  Convert JSON -> Model
  */
-+ (id)importValues:(id)values keys:(NSDictionary *)keys error:(NSError *)error;
-+ (id)importValues:(id)values keys:(NSDictionary *)keys context:(id)context error:(NSError *)error;
++ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError *)error;
++ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError *)error;
+
++ (id)importValues:(id)values context:(id)context error:(NSError *)error;
 
 /**
  Convert Model -> JSON
@@ -24,7 +26,15 @@
 
 /**
  Transformers for value -> value
+ Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}
  */
 + (NSMutableDictionary *)modelTransformers;
++ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo;
+
+/**
+ Utils
+ */
+- (void)willImport;
+- (void)didImport;
 
 @end

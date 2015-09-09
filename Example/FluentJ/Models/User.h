@@ -9,12 +9,15 @@
 #import <Foundation/Foundation.h>
 
 @class Item;
+@class UserCategory;
 
 @interface User : NSObject
 
 @property (nonatomic, strong) NSString *firstName;
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSNumber *age;
+@property (nonatomic, assign) BOOL isVIP;
 @property (nonatomic, strong) NSArray *items;
+@property (nonatomic, strong) UserCategory *category;
 
 @end

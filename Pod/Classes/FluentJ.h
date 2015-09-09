@@ -7,3 +7,5 @@
 //
 
 #import "NSObject+FluentJ.h"
+
+#import "FJModelValueTransformer.h"

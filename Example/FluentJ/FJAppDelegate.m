@@ -17,12 +17,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSString *filepath = [[NSBundle mainBundle] pathForResource:@"types" ofType:@"json"];
+    NSString *filepath = [[NSBundle mainBundle] pathForResource:@"users" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:filepath];
     NSError *error = nil;
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     
-    NSArray *items = [User importValues:json keys:@{@"firstName" : @"firstName"} error:nil];
+    NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
     NSLog(@"%@", items);
     
     return YES;

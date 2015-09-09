@@ -2,8 +2,17 @@
  {
  "firstName": "Kelly",
  "lastName": "Nannie",
+ "isVIP" : 1,
  "name": "Silva Lara",
- "age": 35
+ "age": 35,
+ "items" : [
+ {
+    "name" : "NAME1"
+ }
+ ],
+ "category" : {
+ "name" : "categoryname"
+ }
  },
  {
  "firstName": "Marcella",

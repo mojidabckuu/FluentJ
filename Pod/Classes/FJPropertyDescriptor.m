@@ -221,6 +221,7 @@
     if(self) {
         self.ivar = NULL;
         self.type = NULL;
+        [self setupWithProperty:property];
     }
     return self;
 }
@@ -271,9 +272,10 @@
 //        }
     
         // copy the type string
-        char type[typeLength];
-        strncpy(type, typeString, typeLength);
-        type[typeLength] = '\0';
+        self.type = calloc(sizeof(char), typeLength);
+        strncpy(self.type, typeString, typeLength);
+        self.type[typeLength] = '\0';
+    
         
         // if this is an object type, and immediately followed by a quoted string...
         if (typeString[0] == *(@encode(id)) && typeString[1] == '"') {

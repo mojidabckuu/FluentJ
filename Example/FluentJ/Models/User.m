@@ -10,6 +10,28 @@
 
 #import "Item.h"
 
+#import <FluentJ/FluentJ.h>
+
 @implementation User
+
++ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
+    NSString *action = userInfo[@"action"];
+    if([action isEqualToString:@"index"]) {
+        return @{@"firstName" : @"firstName",
+                 @"isVIP" : @"isVIP",
+                 @"items" : @"items",
+                 @"category" : @"category"};
+    }
+    return @{@"firstName" : @"firstName",
+             @"lastName" : @"lastName"};
+}
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"name: %@, surname: %@ isVip: %@ items: %@ category: %@", self.firstName, self.lastName, self.isVIP ? @"YES" : @"NO", self.items, self.category];
+}
+
++ (NSMutableDictionary *)modelTransformers {
+    return @{@"items" : [FJModelValueTransformer transformerWithModelClass:[Item class]]};
+}
 
 @end

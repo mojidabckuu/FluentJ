@@ -10,6 +10,8 @@
 
 extern NSString *const FJBoolValueTransformer;
 extern NSString *const FJNumberValueTransformer;
+extern NSString *const FJURLValueTransformer;
+extern NSString *const FJEmptyValueTransformer;
 
 @interface NSValueTransformer (PredefinedTransformers)
 

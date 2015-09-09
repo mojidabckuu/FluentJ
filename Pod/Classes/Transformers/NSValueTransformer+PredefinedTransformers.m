@@ -12,6 +12,8 @@
 
 NSString *const FJBoolValueTransformer = @"FJBoolValueTransformer";
 NSString *const FJNumberValueTransformer = @"FJNumberValueTransformer";
+NSString *const FJURLValueTransformer = @"FJURLValueTransformer";
+NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
 
 @implementation NSValueTransformer (PredefinedTransformers)
 
@@ -47,6 +49,38 @@ NSString *const FJNumberValueTransformer = @"FJNumberValueTransformer";
         return nil;
     }];
     [NSValueTransformer setValueTransformer:numberValueTransformer forName:FJNumberValueTransformer];
+    
+    
+    FJValueTransformer *URLValueTransformer = [FJValueTransformer transformerUsingForwardBlock:^id(NSString *value, BOOL *success, NSError *__autoreleasing *error) {
+        if(!value.length || ![value isKindOfClass:NSString.class]) {
+            return nil;
+        }
+        NSURL *URL = [NSURL URLWithString:value];
+        if(!URL) {
+            if(error != NULL) {
+                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: NSLocalizedString(@"Could not convert string to URL", nil)};
+                *error = [NSError errorWithDomain:@"com.FluentJ" code:0 userInfo:userInfo];
+            }
+            *success = NO;
+            return nil;
+        }
+        return URL;
+        
+    } reverseBlock:^id(NSURL *value, BOOL *success, NSError *__autoreleasing *error) {
+        if(!value || ![value isKindOfClass:NSURL.class]) {
+            return nil;
+        }
+        return value.absoluteString;
+    }];
+    [NSValueTransformer setValueTransformer:URLValueTransformer forName:FJURLValueTransformer];
+    
+    FJValueTransformer *emptyValueTransformer = [FJValueTransformer transformerUsingForwardBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
+        return value;
+    } reverseBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
+        return value;
+    }];
+    [NSValueTransformer setValueTransformer:emptyValueTransformer forName:FJEmptyValueTransformer];
+    
 }
 
 @end

@@ -1,21 +1,17 @@
 //
-//  Item.m
+//  Category.m
 //  FluentJ
 //
-//  Created by vlad gorbenko on 9/6/15.
+//  Created by vlad gorbenko on 9/9/15.
 //  Copyright (c) 2015 vlad gorbenko. All rights reserved.
 //
 
-#import "Item.h"
+#import "UserCategory.h"
 
-@implementation Item
+@implementation UserCategory
 
 + (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
     return @{@"name" : @"name"};
-}
-
-- (NSString *)description {
-    return [NSString stringWithFormat:@"name: %@", self.name];
 }
 
 @end
