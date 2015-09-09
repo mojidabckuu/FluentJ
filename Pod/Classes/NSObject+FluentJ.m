@@ -118,6 +118,8 @@
         } else if(propertyDescriptor.type != NULL) {
             if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
                 transformer = [NSValueTransformer valueTransformerForName:FJBoolValueTransformer];
+            } else {
+                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
             }
         }
     }

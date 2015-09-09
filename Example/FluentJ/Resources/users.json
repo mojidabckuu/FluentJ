@@ -12,7 +12,8 @@
  ],
  "category" : {
  "name" : "categoryname"
- }
+ },
+ "commentsCount" : 10
  },
  {
  "firstName": "Marcella",

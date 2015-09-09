@@ -20,4 +20,6 @@
 @property (nonatomic, strong) NSArray *items;
 @property (nonatomic, strong) UserCategory *category;
 
+@property (nonatomic, assign) NSInteger commentsCount;
+
 @end

@@ -20,7 +20,8 @@
         return @{@"firstName" : @"firstName",
                  @"isVIP" : @"isVIP",
                  @"items" : @"items",
-                 @"category" : @"category"};
+                 @"category" : @"category",
+                 @"commentsCount" : @"commentsCount"};
     }
     return @{@"firstName" : @"firstName",
              @"lastName" : @"lastName"};
