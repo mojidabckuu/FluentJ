@@ -26,9 +26,10 @@
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     
     NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"%@", items);
+//    NSLog(@"%@", items);
     
-    NSArray *items = [VGUser impo]
+    NSArray *dbitems = [VGUser importValues:json context:nil userInfo:@{@"action" : @"index"} error:nil];
+    NSLog(@"%@", dbitems);
     
     return YES;
 }

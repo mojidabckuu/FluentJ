@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSString * firstName;
 @property (nonatomic, retain) NSString * lastName;
 @property (nonatomic, retain) NSNumber * age;
+@property (nonatomic, retain) NSNumber * isVIP;
 @property (nonatomic, retain) NSSet *items;
 @property (nonatomic, retain) VGCategory *category;
 @end

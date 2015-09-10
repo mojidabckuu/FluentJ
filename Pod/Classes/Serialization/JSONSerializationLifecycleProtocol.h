@@ -14,7 +14,7 @@
  Transformers for value -> value
  Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}
  */
-+ (NSMutableDictionary *)modelTransformers;
++ (NSDictionary *)modelTransformers;
 + (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo;
 
 /**

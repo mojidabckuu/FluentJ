@@ -31,7 +31,7 @@
     return [NSString stringWithFormat:@"name: %@, surname: %@ isVip: %@ items: %@ category: %@", self.firstName, self.lastName, self.isVIP ? @"YES" : @"NO", self.items, self.category];
 }
 
-+ (NSMutableDictionary *)modelTransformers {
++ (NSDictionary *)modelTransformers {
     return @{@"items" : [FJModelValueTransformer transformerWithModelClass:[Item class]]};
 }
 
