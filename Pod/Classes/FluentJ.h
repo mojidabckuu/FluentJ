@@ -9,3 +9,5 @@
 #import "NSObject+FluentJ.h"
 
 #import "FJModelValueTransformer.h"
+#import "FJValueTransformer.h"
+#import "NSValueTransformer+PredefinedTransformers.h"
