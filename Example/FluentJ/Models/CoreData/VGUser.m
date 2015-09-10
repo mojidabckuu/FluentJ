@@ -34,10 +34,6 @@
              @"lastName" : @"lastName"};
 }
 
-- (NSString *)description {
-    return [NSString stringWithFormat:@"name: %@, surname: %@ isVip: %@ items: %@ category: %@", self.firstName, self.lastName, self.isVIP ? @"YES" : @"NO", self.items, self.category];
-}
-
 + (NSDictionary *)modelTransformers {
     return @{@"items" : [FJModelValueTransformer transformerWithModelClass:[VGItem class]]};
 }
