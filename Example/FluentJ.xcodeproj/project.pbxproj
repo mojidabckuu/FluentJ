@@ -26,6 +26,10 @@
 		F51C11CD1B9C779400B38A82 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = F51C11CC1B9C779400B38A82 /* Item.m */; };
 		F53C08B81B9C76F50017B671 /* users.json in Resources */ = {isa = PBXBuildFile; fileRef = F53C08B71B9C76F50017B671 /* users.json */; };
 		F59104831BA01E0C009919D7 /* UserCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104821BA01E0C009919D7 /* UserCategory.m */; };
+		F59104861BA04A23009919D7 /* Models.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F59104841BA04A23009919D7 /* Models.xcdatamodeld */; };
+		F59104931BA04AF2009919D7 /* VGItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104921BA04AF2009919D7 /* VGItem.m */; };
+		F59104961BA04AF3009919D7 /* VGCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104951BA04AF3009919D7 /* VGCategory.m */; };
+		F59104991BA04AF3009919D7 /* VGUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104981BA04AF3009919D7 /* VGUser.m */; };
 		F90B086DA8C3754E96568A01 /* Pods_FluentJ_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC6D4DB79D2A45245C41C7E3 /* Pods_FluentJ_Tests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -77,6 +81,13 @@
 		F53C08B71B9C76F50017B671 /* users.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = users.json; sourceTree = "<group>"; };
 		F59104811BA01E0C009919D7 /* UserCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserCategory.h; sourceTree = "<group>"; };
 		F59104821BA01E0C009919D7 /* UserCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserCategory.m; sourceTree = "<group>"; };
+		F59104851BA04A23009919D7 /* Models.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Models.xcdatamodel; sourceTree = "<group>"; };
+		F59104911BA04AF2009919D7 /* VGItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGItem.h; sourceTree = "<group>"; };
+		F59104921BA04AF2009919D7 /* VGItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGItem.m; sourceTree = "<group>"; };
+		F59104941BA04AF3009919D7 /* VGCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGCategory.h; sourceTree = "<group>"; };
+		F59104951BA04AF3009919D7 /* VGCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGCategory.m; sourceTree = "<group>"; };
+		F59104971BA04AF3009919D7 /* VGUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VGUser.h; sourceTree = "<group>"; };
+		F59104981BA04AF3009919D7 /* VGUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VGUser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,12 +222,14 @@
 		F51C11C71B9C777500B38A82 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F59104871BA04A9A009919D7 /* CoreData */,
 				F51C11C81B9C778A00B38A82 /* User.h */,
 				F51C11C91B9C778A00B38A82 /* User.m */,
 				F51C11CB1B9C779400B38A82 /* Item.h */,
 				F51C11CC1B9C779400B38A82 /* Item.m */,
 				F59104811BA01E0C009919D7 /* UserCategory.h */,
 				F59104821BA01E0C009919D7 /* UserCategory.m */,
+				F59104841BA04A23009919D7 /* Models.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -227,6 +240,19 @@
 				F53C08B71B9C76F50017B671 /* users.json */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		F59104871BA04A9A009919D7 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				F59104971BA04AF3009919D7 /* VGUser.h */,
+				F59104981BA04AF3009919D7 /* VGUser.m */,
+				F59104941BA04AF3009919D7 /* VGCategory.h */,
+				F59104951BA04AF3009919D7 /* VGCategory.m */,
+				F59104911BA04AF2009919D7 /* VGItem.h */,
+				F59104921BA04AF2009919D7 /* VGItem.m */,
+			);
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -397,9 +423,13 @@
 			files = (
 				F51C11CD1B9C779400B38A82 /* Item.m in Sources */,
 				F59104831BA01E0C009919D7 /* UserCategory.m in Sources */,
+				F59104961BA04AF3009919D7 /* VGCategory.m in Sources */,
 				F51C11CA1B9C778A00B38A82 /* User.m in Sources */,
+				F59104931BA04AF2009919D7 /* VGItem.m in Sources */,
 				6003F59E195388D20070C39A /* FJAppDelegate.m in Sources */,
+				F59104861BA04A23009919D7 /* Models.xcdatamodeld in Sources */,
 				6003F5A7195388D20070C39A /* FJViewController.m in Sources */,
+				F59104991BA04AF3009919D7 /* VGUser.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -617,6 +647,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F59104841BA04A23009919D7 /* Models.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F59104851BA04A23009919D7 /* Models.xcdatamodel */,
+			);
+			currentVersion = F59104851BA04A23009919D7 /* Models.xcdatamodel */;
+			path = Models.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 6003F582195388D10070C39A /* Project object */;
 }

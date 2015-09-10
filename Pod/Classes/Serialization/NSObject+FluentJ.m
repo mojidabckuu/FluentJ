@@ -15,6 +15,9 @@
 #import "FJValueTransformer.h"
 #import "FJModelValueTransformer.h"
 #import "NSValueTransformer+PredefinedTransformers.h"
+#import "NSObject+PredefinedTransformers.h"
+
+#import "NSDictionary+Init.h"
 
 @implementation NSObject (FluentJ)
 
@@ -46,13 +49,7 @@
         if(transformer && !isCollection) {
             value = [transformer transformedValue:value];
         } else {
-            NSMutableDictionary *subitemUserInfo = [NSMutableDictionary dictionary];
-            for(id userInfoKey in userInfo.allKeys) {
-                if([userInfoKey isKindOfClass:NSString.class]) {
-                    NSString *key = [NSString stringWithFormat:@"%@.%@", NSStringFromClass([self class]), userInfoKey];
-                    [subitemUserInfo setObject:userInfo[userInfoKey] forKey:key];
-                }
-            }
+            NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
             if(isCollection) {
                 NSString *description = [NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name];
                 NSAssert(transformer, description);
@@ -80,11 +77,6 @@
     return item;
 }
 
-+ (id)importValues:(id)values context:(id)context error:(NSError *)error {
-    // TODO: add realisation for CoreData models.
-    return nil;
-}
-
 - (id)exportValuesWithKeys:(NSArray *)keys {
     return nil;
 }
@@ -99,31 +91,6 @@
 
 + (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
     return @{};
-}
-
-#pragma mark - Utils
-
-+ (NSValueTransformer *)transformerWithPropertyDescriptor:(FJPropertyDescriptor *)propertyDescriptor {
-    NSDictionary *transformers = [self modelTransformers];
-    NSValueTransformer *transformer = transformers[propertyDescriptor.name];
-    if(!transformer) {
-        if(propertyDescriptor.typeClass != nil) {
-            if(propertyDescriptor.typeClass == NSNumber.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJNumberValueTransformer];
-            } else if(propertyDescriptor.typeClass == NSURL.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformer];
-            } else if(propertyDescriptor.typeClass == NSString.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
-            }
-        } else if(propertyDescriptor.type != NULL) {
-            if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
-                transformer = [NSValueTransformer valueTransformerForName:FJBoolValueTransformer];
-            } else {
-                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
-            }
-        }
-    }
-    return transformer;
 }
 
 #pragma mark - Notifications

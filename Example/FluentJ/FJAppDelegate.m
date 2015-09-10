@@ -13,6 +13,9 @@
 #import "User.h"
 #import "Item.h"
 
+#import "VGUser.h"
+#import "VGItem.h"
+
 @implementation FJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -24,6 +27,8 @@
     
     NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
     NSLog(@"%@", items);
+    
+    NSArray *items = [VGUser impo]
     
     return YES;
 }

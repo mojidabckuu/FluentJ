@@ -1,0 +1,26 @@
+//
+//  JSONSerializationLifecycleProtocol.h
+//  Pods
+//
+//  Created by vlad gorbenko on 9/10/15.
+//
+//
+
+#import <Foundation/Foundation.h>
+
+@protocol JSONSerializationLifecycleProtocol <NSObject>
+
+/**
+ Transformers for value -> value
+ Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}
+ */
++ (NSMutableDictionary *)modelTransformers;
++ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo;
+
+/**
+ Utils
+ */
+- (void)willImport;
+- (void)didImport;
+
+@end
