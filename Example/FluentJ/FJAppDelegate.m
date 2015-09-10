@@ -31,12 +31,12 @@
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     
     NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"%@", items);
+//    NSLog(@"%@", items);
     
     id context = [NSManagedObjectContext MR_defaultContext];
     
     NSArray *dbitems = [VGUser importValues:json context:context userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"%@", dbitems);
+//    NSLog(@"%@", dbitems);
     
     return YES;
 }
