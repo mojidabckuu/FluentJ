@@ -10,6 +10,7 @@
 
 @protocol JSONSerializationLifecycleProtocol <NSObject>
 
+@optional
 /**
  Transformers for value -> value
  Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}

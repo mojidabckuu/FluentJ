@@ -93,10 +93,6 @@
     return [NSMutableDictionary dictionary];
 }
 
-+ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
-    return @{};
-}
-
 #pragma mark - Notifications
 
 - (void)willImport {
