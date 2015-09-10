@@ -16,8 +16,7 @@ Pod::Spec.new do |s|
 #   * Try to keep it short, snappy and to the point.
 #   * Write the description between the DESC delimiters below.
 #   * Finally, don't worry about the indent, CocoaPods strips it!  
-  s.description      = <<-DESC
-                       DESC
+  s.description      = "This library doesn't depend on any parent class model. You can use it without any inheritance, you just need implement callbacks to provide rules of parsing."
 
   s.homepage         = "https://github.com/mojidabckuu/FluentJ"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"

@@ -243,25 +243,25 @@
         const char * const attrString = property_getAttributes(property);
         if (!attrString) {
             fprintf(stderr, "ERROR: Could not get attribute string from property %s\n", property_getName(property));
-            return NULL;
+            return NO;
         }
         
         if (attrString[0] != 'T') {
             fprintf(stderr, "ERROR: Expected attribute string \"%s\" for property %s to start with 'T'\n", attrString, property_getName(property));
-            return NULL;
+            return NO;
         }
         
         const char *typeString = attrString + 1;
         const char *next = NSGetSizeAndAlignment(typeString, NULL, NULL);
         if (!next) {
             fprintf(stderr, "ERROR: Could not read past type in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
-            return NULL;
+            return NO;
         }
         
         size_t typeLength = next - typeString;
         if (!typeLength) {
             fprintf(stderr, "ERROR: Invalid type in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
-            return NULL;
+            return NO;
         }
         
         // allocate enough space for the structure and the type string (plus a NUL)
@@ -285,7 +285,7 @@
             
             if (!next) {
                 fprintf(stderr, "ERROR: Could not read class name in attribute string \"%s\" for property %s\n", attrString, property_getName(property));
-                return NULL;
+                return NO;
             }
             
             if (className != next) {

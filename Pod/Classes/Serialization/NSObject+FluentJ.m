@@ -55,8 +55,7 @@
         } else {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
             if(isCollection) {
-                NSString *description = [NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name];
-                NSAssert(transformer, description);
+                NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                     FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                     modelTransformer.userInfo = subitemUserInfo;
