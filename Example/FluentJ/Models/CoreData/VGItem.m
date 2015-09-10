@@ -15,4 +15,8 @@
 @dynamic name;
 @dynamic user;
 
++ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
+    return @{@"name" : @"name"};
+}
+
 @end

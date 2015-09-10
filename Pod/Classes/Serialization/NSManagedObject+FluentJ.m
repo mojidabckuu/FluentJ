@@ -23,19 +23,19 @@
 
 #pragma mark -
 
-+ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError *)error {
++ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSAssert(false, @"Use +importValue:context:userInfo:error: instead");
     return nil;
 }
 
-+ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError *)error {
++ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSAssert(false, @"Use +importValues:context:userInfo:error: instead");
     return nil;
 }
 
 #pragma mark - Import
 
-+ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *)error {
++ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSMutableArray *items = [NSMutableArray array];
     for(id value in values) {
         id item = [self importValue:value context:context userInfo:userInfo error:error];
@@ -44,8 +44,7 @@
     return items;
 }
 
-+ (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *)error {
-    NSDictionary *modelTransformers = [self modelTransformers];
++ (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSDictionary *keys = [[self class] keysForKeyPaths:userInfo];
     NSArray *allKeys = [keys allKeys];
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
@@ -59,10 +58,7 @@
         NSRelationshipDescription *relationshipDescription = relationships[propertyDescriptor.name];
         id value = values[keys[propertyDescriptor.name]];
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = modelTransformers[propertyDescriptor.name];
-        if(!transformer) {
-            transformer = [self transformerWithPropertyDescriptor:propertyDescriptor];
-        }
+        NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor];
         if(transformer && !isCollection) {
             value = [transformer transformedValue:value];
         } else {
@@ -73,6 +69,7 @@
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                     FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                     modelTransformer.userInfo = subitemUserInfo;
+                    modelTransformer.context = context;
                 }
                 
                 id subitems = [transformer transformedValue:value];
@@ -102,7 +99,7 @@
                 }
                 value = nil;
             } else {
-                value = [propertyDescriptor.typeClass importValue:value userInfo:subitemUserInfo error:error];
+                value = [propertyDescriptor.typeClass importValue:value context:context userInfo:subitemUserInfo error:error];
             }
         }
         if(value) {

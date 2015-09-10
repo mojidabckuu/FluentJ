@@ -2,7 +2,8 @@ source 'https://github.com/CocoaPods/Specs.git'
 use_frameworks!
 
 target 'FluentJ_Example', :exclusive => true do
-  pod "FluentJ", :path => "../"
+    pod 'MagicalRecord'
+    pod "FluentJ", :path => "../"
 end
 
 target 'FluentJ_Tests', :exclusive => true do

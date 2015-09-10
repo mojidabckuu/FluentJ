@@ -12,10 +12,4 @@
 
 @interface NSManagedObject (FluentJ)
 
-/**
- JSON -> Model using specified context
- */
-+ (id)importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *)error;
-+ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *)error;
-
 @end

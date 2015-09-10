@@ -12,6 +12,7 @@
 
 @property (nonatomic, assign, readonly) Class modelClass;
 @property (nonatomic, strong) NSDictionary *userInfo;
+@property (nonatomic, strong) id context;
 
 + (instancetype)transformerWithModelClass:(Class)modelClass;
 - (instancetype)initWithModelClass:(Class)modelClass;

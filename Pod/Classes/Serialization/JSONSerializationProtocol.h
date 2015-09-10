@@ -13,8 +13,14 @@
 /**
  Convert JSON -> Model
  */
-+ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError *)error;
-+ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError *)error;
++ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError **)error;
++ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError **)error;
+
+/**
+ JSON -> Model using specified context
+ */
++ (id)importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
++ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
 
 /**
  Convert Model -> JSON

@@ -16,10 +16,15 @@
 #import "VGUser.h"
 #import "VGItem.h"
 
+#import <MagicalRecord/MagicalRecord.h>
+
 @implementation FJAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    [MagicalRecord setupCoreDataStack];
+    
     NSString *filepath = [[NSBundle mainBundle] pathForResource:@"users" ofType:@"json"];
     NSData *data = [NSData dataWithContentsOfFile:filepath];
     NSError *error = nil;
@@ -28,7 +33,9 @@
     NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
 //    NSLog(@"%@", items);
     
-    NSArray *dbitems = [VGUser importValues:json context:nil userInfo:@{@"action" : @"index"} error:nil];
+    id context = [NSManagedObjectContext MR_defaultContext];
+    
+    NSArray *dbitems = [VGUser importValues:json context:context userInfo:@{@"action" : @"index"} error:nil];
     NSLog(@"%@", dbitems);
     
     return YES;
@@ -58,6 +65,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
+    [MagicalRecord cleanUp];
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 

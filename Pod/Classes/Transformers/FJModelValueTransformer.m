@@ -36,7 +36,7 @@
 #pragma mark - Transformation
 
 - (id)transformedValue:(id)value {
-    return [[self modelClass] importValues:value userInfo:self.userInfo error:nil];
+    return [[self modelClass] importValues:value context:self.context userInfo:self.userInfo error:nil];
 }
 
 - (id)reverseTransformedValue:(id)value {
