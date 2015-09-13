@@ -48,6 +48,9 @@
         }
         [item willImport];
         id value = values[keys[propertyDescriptor.name]];
+        if([value isKindOfClass:[NSNull class]]) {
+            continue;
+        }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
         NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor];
         if(transformer && !isCollection) {
