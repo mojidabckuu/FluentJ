@@ -13,6 +13,5 @@
 @interface NSManagedObject (FluentJ)
 
 + (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing *)error NS_UNAVAILABLE;
-+ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing *)error NS_UNAVAILABLE;
 
 @end

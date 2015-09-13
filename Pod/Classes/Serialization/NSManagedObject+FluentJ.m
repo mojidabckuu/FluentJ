@@ -23,24 +23,15 @@
 
 @implementation NSManagedObject (FluentJ)
 
-#pragma mark - Import
+#pragma mark - Import Private
 
-+ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    NSMutableArray *items = [NSMutableArray array];
-    for(id value in values) {
-        id item = [self importValue:value context:context userInfo:userInfo error:error];
-        [items addObject:item];
-    }
-    return items;
-}
-
-+ (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    if(!values) {
++ (id)_importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if(!value) {
         return nil;
     }
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
     id item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
-    [item updateWithValue:values context:context userInfo:userInfo error:error];
+    [item updateWithValue:value context:context userInfo:userInfo error:error];
     return item;
 }
 
@@ -62,7 +53,7 @@
 
 #pragma mark - Utils
 
-- (void)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+- (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSDictionary *relationships = [self.entity relationshipsByName];
     NSRelationshipDescription *relationshipDescription = relationships[property.name];
     
@@ -91,6 +82,7 @@
         [relationshipSource performSelector:selector withObject:subitem];
 #pragma clang diagnostic pop
     }
+    return nil;
 }
 
 @end

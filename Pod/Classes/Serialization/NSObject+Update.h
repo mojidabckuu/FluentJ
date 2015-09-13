@@ -12,6 +12,7 @@
 
 @interface NSObject (Update)
 
-- (void)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
+- (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
+- (void)exportValuesWithProperty:(FJPropertyDescriptor *)property userInfo:(NSDictionary *)userInfo error:(NSError **)error;
 
 @end

@@ -23,18 +23,33 @@
 
 #import "NSObject+Update.h"
 
+#import "NSObject+Collection.h"
+
 @implementation NSObject (FluentJ)
 
 #pragma mark - Import
 
-+ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    return [self importValues:values context:nil userInfo:userInfo error:error];
++ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing *)error {
+    return [self importValue:value context:nil userInfo:userInfo error:error];
 }
 
-+ (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
++ (id)importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if([value isKindOfClass:[NSArray class]]) {
+        return [self _importValues:value context:context userInfo:userInfo error:error];
+    } else {
+        return [self _importValue:value context:context userInfo:userInfo error:error];
+    }
+}
+
+#pragma mark - Import Private
+
++ (id)_importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if(![values count]) {
+        return nil;
+    }
     NSMutableArray *items = [NSMutableArray array];
     for(id value in values) {
-        id item = [self importValue:value userInfo:userInfo error:error];
+        id item = [self _importValue:value context:context userInfo:userInfo error:error];
         if(item) {
             [items addObject:item];
         }
@@ -42,16 +57,12 @@
     return items;
 }
 
-+ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    return [self importValue:value context:nil userInfo:userInfo error:error];
-}
-
-+ (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    if(!values) {
++ (id)_importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if(!value) {
         return nil;
     }
     id item = [[[self class] alloc] init];
-    [item updateWithValue:values context:context userInfo:userInfo error:error];
+    [item updateWithValue:value context:context userInfo:userInfo error:error];
     return item;
 }
 
@@ -87,8 +98,7 @@
                     modelTransformer.context = context;
                 }
                 
-                [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
-                value = nil;
+                value = [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
             } else {
                 id subvalue = [self valueForKey:propertyDescriptor.name];
                 if(subvalue) {
@@ -108,12 +118,39 @@
 
 #pragma mark - Export
 
-- (id)exportValuesWithKeys:(NSArray *)keys {
-    return nil;
-}
-
-- (id)exportValuesWithKeys:(NSArray *)keys error:(NSError **)error {
-    return nil;
+- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError *)error {
+    NSMutableDictionary *json = [NSMutableDictionary dictionary];
+    NSSet *properties = [[self class] properties];
+    
+    NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:properties];
+    NSArray *allKeys = [keys allKeys];
+    
+    for(FJPropertyDescriptor *propertyDescriptor in properties) {
+        if(![allKeys containsObject:propertyDescriptor.name]) {
+            continue;
+        }
+        id value = [self valueForKey:propertyDescriptor.name];
+        if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
+            NSMutableArray *subitems = [NSMutableArray array];
+            for(id item in value) {
+                NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+                id subItemjson = [item exportWithUserInfo:subitemUserInfo error:error];
+                [subitems addObject:subItemjson];
+            }
+            [json setObject:subitems forKey:keys[propertyDescriptor.name]];
+        } else {
+            NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
+            if(transformer) {
+                id transformedValue = [transformer reverseTransformedValue:value];
+                [json setObject:transformedValue forKey:keys[propertyDescriptor.name]];
+            } else {
+                NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+                id exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
+                [json setObject:exportedValue forKey:keys[propertyDescriptor.name]];
+            }
+        }
+    }
+    return json;
 }
 
 + (NSMutableDictionary *)modelTransformers {
@@ -144,11 +181,11 @@
     return keys;
 }
 
-- (void)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+- (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     id subitems = [transformer transformedValue:value];
     id oldValue = [self valueForKey:property.name];
     if(![subitems count]) {
-        return;
+        return nil;
     }
     if([oldValue count]) {
         if([[oldValue class] isMutable]) {
@@ -163,6 +200,7 @@
     } else {
         value = [[property.typeClass alloc] initWithArray:subitems];
     }
+    return value;
 }
 
 @end

@@ -30,7 +30,7 @@
     NSError *error = nil;
     id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
     
-    NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
+    NSArray *items = [User importValue:json userInfo:@{@"action" : @"index"} error:nil];
     NSLog(@"%@", items);
     
     id item = [items firstObject];
