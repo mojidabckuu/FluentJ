@@ -19,6 +19,8 @@
 
 #import <CoreData/CoreData.h>
 
+#import "NSObject+Update.h"
+
 @implementation NSManagedObject (FluentJ)
 
 #pragma mark - Import
@@ -45,69 +47,7 @@
 #pragma mark - Update
 
 - (void)updateWithValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing *)error {
-    NSDictionary *keys = [[self class] keysForKeyPaths:userInfo];
-    NSArray *allKeys = [keys allKeys];
-    NSEntityDescription *entityDescription = self.entity;
-    NSDictionary *relationships = [entityDescription relationshipsByName];
-    [self willImportWithUserInfo:userInfo];
-    for(FJPropertyDescriptor *propertyDescriptor in [[self class] properties]) {
-        if(![allKeys containsObject:propertyDescriptor.name]) {
-            continue;
-        }
-        NSRelationshipDescription *relationshipDescription = relationships[propertyDescriptor.name];
-        id value = values[keys[propertyDescriptor.name]];
-        if([value isKindOfClass:[NSNull class]]) {
-            continue;
-        }
-        BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
-        if(transformer && !isCollection) {
-            value = [transformer transformedValue:value];
-        } else {
-            NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
-            if(isCollection) {
-                NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
-                if([transformer isKindOfClass:FJModelValueTransformer.class]) {
-                    FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
-                    modelTransformer.userInfo = subitemUserInfo;
-                    modelTransformer.context = context;
-                }
-                
-                id subitems = [transformer transformedValue:value];
-                
-                for(id subitem in subitems) {
-                    NSString *addRelationMessageFormat = @"set%@:";
-                    id relationshipSource = self;
-                    if ([relationshipDescription isToMany]) {
-                        addRelationMessageFormat = @"add%@Object:";
-                        if ([relationshipDescription respondsToSelector:@selector(isOrdered)] && [relationshipDescription isOrdered]) {
-                            NSString *selectorName = [relationshipDescription name];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                            relationshipSource = [self performSelector:NSSelectorFromString(selectorName)];
-#pragma clang diagnostic pop
-                            addRelationMessageFormat = @"addObject:";
-                        }
-                    }
-                    
-                    NSString *addRelatedObjectToSetMessage = [NSString stringWithFormat:addRelationMessageFormat, [[relationshipDescription name] capitalizedString]];
-                    SEL selector = NSSelectorFromString(addRelatedObjectToSetMessage);
-                    
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-                    [relationshipSource performSelector:selector withObject:subitem];
-#pragma clang diagnostic pop
-                }
-                value = nil;
-            } else {
-                value = [propertyDescriptor.typeClass importValue:value context:context userInfo:subitemUserInfo error:error];
-            }
-        }
-        if(value) {
-            [self setValue:value forKey:propertyDescriptor.name];
-        }
-    }
-    [self didImportWithUserInfo:userInfo];
+    [super updateWithValue:values context:context userInfo:userInfo error:error];
 }
 
 #pragma mark - Export
@@ -118,6 +58,39 @@
 
 - (id)exportValuesWithKeys:(NSArray *)keys error:(NSError *__autoreleasing *)error {
     return nil;
+}
+
+#pragma mark - Utils
+
+- (void)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    NSDictionary *relationships = [self.entity relationshipsByName];
+    NSRelationshipDescription *relationshipDescription = relationships[property.name];
+    
+    id subitems = [transformer transformedValue:value];
+    
+    for(id subitem in subitems) {
+        NSString *addRelationMessageFormat = @"set%@:";
+        id relationshipSource = self;
+        if ([relationshipDescription isToMany]) {
+            addRelationMessageFormat = @"add%@Object:";
+            if ([relationshipDescription respondsToSelector:@selector(isOrdered)] && [relationshipDescription isOrdered]) {
+                NSString *selectorName = [relationshipDescription name];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                relationshipSource = [self performSelector:NSSelectorFromString(selectorName)];
+#pragma clang diagnostic pop
+                addRelationMessageFormat = @"addObject:";
+            }
+        }
+        
+        NSString *addRelatedObjectToSetMessage = [NSString stringWithFormat:addRelationMessageFormat, [[relationshipDescription name] capitalizedString]];
+        SEL selector = NSSelectorFromString(addRelatedObjectToSetMessage);
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [relationshipSource performSelector:selector withObject:subitem];
+#pragma clang diagnostic pop
+    }
 }
 
 @end

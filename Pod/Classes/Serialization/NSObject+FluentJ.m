@@ -21,6 +21,8 @@
 
 #import "NSObject+Mutable.h"
 
+#import "NSObject+Update.h"
+
 @implementation NSObject (FluentJ)
 
 #pragma mark - Import
@@ -84,21 +86,9 @@
                     modelTransformer.userInfo = subitemUserInfo;
                     modelTransformer.context = context;
                 }
-                id subitems = [transformer transformedValue:value];
-                id oldValue = [self valueForKey:propertyDescriptor.name];
-                if([oldValue count] && [subitems count]) {
-                    if([[oldValue class] isMutable]) {
-                        [oldValue addObjectsFromArray:subitems];
-                        value = nil;
-                    } else {
-                        NSMutableArray *newValues = [NSMutableArray array];
-                        [newValues addObjectsFromArray:[oldValue allObjects]];
-                        [newValues addObjectsFromArray:subitems];
-                        value = [[[oldValue class] alloc] initWithArray:newValues];
-                    }
-                } else {
-                    value = [[propertyDescriptor.typeClass alloc] initWithArray:subitems];
-                }
+                
+                [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
+                value = nil;
             } else {
                 id subvalue = [self valueForKey:propertyDescriptor.name];
                 if(subvalue) {
@@ -152,6 +142,27 @@
         [keys setValue:propertyDescriptor.name forKey:propertyDescriptor.name];
     }
     return keys;
+}
+
+- (void)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    id subitems = [transformer transformedValue:value];
+    id oldValue = [self valueForKey:property.name];
+    if(![subitems count]) {
+        return;
+    }
+    if([oldValue count]) {
+        if([[oldValue class] isMutable]) {
+            [oldValue addObjectsFromArray:subitems];
+            value = nil;
+        } else {
+            NSMutableArray *newValues = [NSMutableArray array];
+            [newValues addObjectsFromArray:[oldValue allObjects]];
+            [newValues addObjectsFromArray:subitems];
+            value = [[[oldValue class] alloc] initWithArray:newValues];
+        }
+    } else {
+        value = [[property.typeClass alloc] initWithArray:subitems];
+    }
 }
 
 @end
