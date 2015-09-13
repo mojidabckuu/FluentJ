@@ -23,6 +23,11 @@
 + (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
 
 /**
+ Update Model using JSON
+ */
+- (void)updateWithValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
+
+/**
  Convert Model -> JSON
  */
 - (id)exportValuesWithKeys:(NSArray *)keys;

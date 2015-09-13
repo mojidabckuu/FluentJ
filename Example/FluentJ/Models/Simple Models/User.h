@@ -17,7 +17,7 @@
 @property (nonatomic, strong) NSString *lastName;
 @property (nonatomic, strong) NSNumber *age;
 @property (nonatomic, assign) BOOL isVIP;
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic, strong) NSSet *items;
 @property (nonatomic, strong) UserCategory *category;
 
 @property (nonatomic, assign) NSInteger commentsCount;

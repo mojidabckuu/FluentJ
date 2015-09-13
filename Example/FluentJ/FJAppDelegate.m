@@ -33,6 +33,12 @@
     NSArray *items = [User importValues:json userInfo:@{@"action" : @"index"} error:nil];
     NSLog(@"%@", items);
     
+    id item = [items firstObject];
+    NSDictionary *userDictionary = @{@"firstName" : @"Vlad",
+                                     @"lastName" : @"Gorbenko"};
+
+    [item updateWithValue:userDictionary context:nil userInfo:nil error:nil];
+    NSLog(@"%@", item);
 //    id context = [NSManagedObjectContext MR_defaultContext];
 //    
 //    NSArray *dbitems = [VGUser importValues:json context:context userInfo:@{@"action" : @"index"} error:nil];
