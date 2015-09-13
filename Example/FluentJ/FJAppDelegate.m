@@ -39,11 +39,9 @@
 
     [item updateWithValue:userDictionary context:nil userInfo:nil error:nil];
     NSLog(@"%@", item);
-//    id context = [NSManagedObjectContext MR_defaultContext];
-//    
-//    NSArray *dbitems = [VGUser importValues:json context:context userInfo:@{@"action" : @"index"} error:nil];
-//    NSLog(@"%@", dbitems);
-    
+
+    NSDictionary *obj = [item exportWithUserInfo:nil error:error];
+    NSLog(@"%@", obj);
     return YES;
 }
 

@@ -47,6 +47,15 @@ NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
             return value;
         }
         return nil;
+    } reverseBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
+        if([value isKindOfClass:[NSNumber class]]) {
+            *success = YES;
+            return value;
+        }
+        NSDictionary *userInfo = @{NSLocalizedDescriptionKey : NSLocalizedString(@"Value is not a number value", nil)};
+        *error = [NSError errorWithDomain:@"com.FluentJ" code:0 userInfo:userInfo];
+        *success = NO;
+        return nil;
     }];
     [NSValueTransformer setValueTransformer:numberValueTransformer forName:FJNumberValueTransformer];
     
