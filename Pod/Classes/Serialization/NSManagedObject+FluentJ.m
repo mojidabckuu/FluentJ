@@ -21,18 +21,6 @@
 
 @implementation NSManagedObject (FluentJ)
 
-#pragma mark -
-
-+ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    NSAssert(false, @"Use +importValue:context:userInfo:error: instead");
-    return nil;
-}
-
-+ (id)importValues:(id)values userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    NSAssert(false, @"Use +importValues:context:userInfo:error: instead");
-    return nil;
-}
-
 #pragma mark - Import
 
 + (id)importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
@@ -45,23 +33,34 @@
 }
 
 + (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if(!values) {
+        return nil;
+    }
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
+    id item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
+    [item updateWithValue:values context:context userInfo:userInfo error:error];
+    return item;
+}
+
+#pragma mark - Update
+
+- (void)updateWithValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing *)error {
     NSDictionary *keys = [[self class] keysForKeyPaths:userInfo];
     NSArray *allKeys = [keys allKeys];
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
+    NSEntityDescription *entityDescription = self.entity;
     NSDictionary *relationships = [entityDescription relationshipsByName];
-    id item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
+    [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in [[self class] properties]) {
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
-        [item willImportWithUserInfo:userInfo];
         NSRelationshipDescription *relationshipDescription = relationships[propertyDescriptor.name];
         id value = values[keys[propertyDescriptor.name]];
         if([value isKindOfClass:[NSNull class]]) {
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor];
+        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
         if(transformer && !isCollection) {
             value = [transformer transformedValue:value];
         } else {
@@ -78,7 +77,7 @@
                 
                 for(id subitem in subitems) {
                     NSString *addRelationMessageFormat = @"set%@:";
-                    id relationshipSource = item;
+                    id relationshipSource = self;
                     if ([relationshipDescription isToMany]) {
                         addRelationMessageFormat = @"add%@Object:";
                         if ([relationshipDescription respondsToSelector:@selector(isOrdered)] && [relationshipDescription isOrdered]) {
@@ -105,10 +104,20 @@
             }
         }
         if(value) {
-            [item setValue:value forKey:propertyDescriptor.name];
+            [self setValue:value forKey:propertyDescriptor.name];
         }
     }
-    [item didImportWithUserInfo:userInfo];
-    return item;
+    [self didImportWithUserInfo:userInfo];
 }
+
+#pragma mark - Export
+
+- (id)exportValuesWithKeys:(NSArray *)keys {
+    return nil;
+}
+
+- (id)exportValuesWithKeys:(NSArray *)keys error:(NSError *__autoreleasing *)error {
+    return nil;
+}
+
 @end
