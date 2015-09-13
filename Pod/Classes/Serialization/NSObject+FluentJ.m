@@ -81,7 +81,7 @@
             continue;
         }
         id value = values[keys[propertyDescriptor.name]];
-        if([value isKindOfClass:[NSNull class]]) {
+        if(!value || [value isKindOfClass:[NSNull class]]) {
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
