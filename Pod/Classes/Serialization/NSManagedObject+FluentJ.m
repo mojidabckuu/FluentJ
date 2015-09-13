@@ -41,16 +41,6 @@
     [super updateWithValue:values context:context userInfo:userInfo error:error];
 }
 
-#pragma mark - Export
-
-- (id)exportValuesWithKeys:(NSArray *)keys {
-    return nil;
-}
-
-- (id)exportValuesWithKeys:(NSArray *)keys error:(NSError *__autoreleasing *)error {
-    return nil;
-}
-
 #pragma mark - Utils
 
 - (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
