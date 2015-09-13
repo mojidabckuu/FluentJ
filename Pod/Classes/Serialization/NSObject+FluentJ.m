@@ -39,10 +39,11 @@
 }
 
 + (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    NSDictionary *keys = [[self class] keysForKeyPaths:userInfo];
+    NSSet *properties = [[self class] properties];
+    NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [self keysWithProperties:properties];
     NSArray *allKeys = [keys allKeys];
     id item = [[[self class] alloc] init];
-    for(FJPropertyDescriptor *propertyDescriptor in [[self class] properties]) {
+    for(FJPropertyDescriptor *propertyDescriptor in properties) {
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
@@ -102,6 +103,22 @@
 }
 
 - (void)didImport {
+}
+
+#pragma mark - Serialization methods
+
++ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
+    return nil;
+}
+
+#pragma mark - Utils
+
++ (NSDictionary *)keysWithProperties:(NSSet *)properties {
+    NSMutableDictionary *keys = [NSMutableDictionary dictionary];
+    for(FJPropertyDescriptor *propertyDescriptor in properties) {
+        [keys setValue:propertyDescriptor.name forKey:propertyDescriptor.name];
+    }
+    return keys;
 }
 
 @end
