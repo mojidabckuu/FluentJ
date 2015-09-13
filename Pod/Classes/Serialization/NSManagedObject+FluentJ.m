@@ -54,7 +54,7 @@
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
-        [item willImport];
+        [item willImportWithUserInfo:userInfo];
         NSRelationshipDescription *relationshipDescription = relationships[propertyDescriptor.name];
         id value = values[keys[propertyDescriptor.name]];
         if([value isKindOfClass:[NSNull class]]) {
@@ -108,7 +108,7 @@
             [item setValue:value forKey:propertyDescriptor.name];
         }
     }
-    [item didImport];
+    [item didImportWithUserInfo:userInfo];
     return item;
 }
 @end

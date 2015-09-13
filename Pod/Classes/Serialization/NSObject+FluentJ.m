@@ -47,7 +47,7 @@
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
-        [item willImport];
+        [item willImportWithUserInfo:userInfo];
         id value = values[keys[propertyDescriptor.name]];
         if([value isKindOfClass:[NSNull class]]) {
             continue;
@@ -81,7 +81,7 @@
             [item setValue:value forKey:propertyDescriptor.name];
         }
     }
-    [item didImport];
+    [item didImportWithUserInfo:userInfo];
     return item;
 }
 
@@ -99,10 +99,10 @@
 
 #pragma mark - Notifications
 
-- (void)willImport {
+- (void)willImportWithUserInfo:(NSDictionary *)userInfo {
 }
 
-- (void)didImport {
+- (void)didImportWithUserInfo:(NSDictionary *)userInfo {
 }
 
 #pragma mark - Serialization methods

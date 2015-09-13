@@ -21,7 +21,7 @@
 /**
  Utils
  */
-- (void)willImport;
-- (void)didImport;
+- (void)willImportWithUserInfo:(NSDictionary *)userInfo;
+- (void)didImportWithUserInfo:(NSDictionary *)userInfo;
 
 @end
