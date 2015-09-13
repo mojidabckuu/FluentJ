@@ -29,7 +29,9 @@
     NSMutableArray *items = [NSMutableArray array];
     for(id value in values) {
         id item = [self importValue:value userInfo:userInfo error:error];
-        [items addObject:item];
+        if(item) {
+            [items addObject:item];
+        }
     }
     return items;
 }
@@ -39,6 +41,9 @@
 }
 
 + (id)importValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if(!values) {
+        return nil;
+    }
     NSSet *properties = [[self class] properties];
     NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [self keysWithProperties:properties];
     NSArray *allKeys = [keys allKeys];
