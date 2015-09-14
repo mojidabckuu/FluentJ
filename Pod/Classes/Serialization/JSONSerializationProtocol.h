@@ -13,21 +13,21 @@
 /**
  Convert JSON -> Model
  */
-+ (id)importValue:(id)value userInfo:(NSDictionary *)userInfo error:(NSError **)error;
++ (nullable id)importValue:(nullable id)value userInfo:(nullable NSDictionary *)userInfo error:(NSError  *__nullable __autoreleasing *__nullable)error;
 
 /**
  JSON -> Model using specified context
  */
-+ (id)importValue:(id)value context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
++ (nullable id)importValue:(nullable id)value context:(nullable id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 /**
  Update Model using JSON
  */
-- (void)updateWithValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error;
+- (void)updateWithValue:(nullable id)values context:(nullable id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 /**
  Convert Model -> JSON
  */
-- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError **)error;
+- (nullable id)exportWithUserInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 @end

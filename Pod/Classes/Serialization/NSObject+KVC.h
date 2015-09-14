@@ -10,6 +10,6 @@
 
 @interface NSObject (KVC)
 
-- (id)valueForVariableKey:(id)key;
+- (nullable id)valueForVariableKey:(nonnull id)key;
 
 @end
