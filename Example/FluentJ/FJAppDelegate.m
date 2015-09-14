@@ -40,7 +40,7 @@
     [item updateWithValue:userDictionary context:nil userInfo:nil error:nil];
     NSLog(@"%@", item);
 
-    NSDictionary *obj = [item exportWithUserInfo:nil error:error];
+    NSDictionary *obj = [item exportWithUserInfo:nil error:&error];
     NSLog(@"%@", obj);
     return YES;
 }

@@ -118,7 +118,7 @@
 
 #pragma mark - Export
 
-- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError *)error {
+- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError **)error {
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     NSSet *properties = [[self class] properties];
     

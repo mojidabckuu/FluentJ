@@ -28,6 +28,6 @@
 /**
  Convert Model -> JSON
  */
-- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError *)error;
+- (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError **)error;
 
 @end
