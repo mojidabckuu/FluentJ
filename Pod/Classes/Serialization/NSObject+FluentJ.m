@@ -23,7 +23,7 @@
 
 #import "NSObject+Update.h"
 
-#import "NSObject+Collection.h"
+#import "NSObject+KVC.h"
 
 @implementation NSObject (FluentJ)
 
@@ -80,18 +80,7 @@
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
-        id propertyKeys = keys[propertyDescriptor.name];
-        id value = nil;
-        if([propertyKeys isCollection]) {
-            for(id propertyKey in propertyKeys) {
-                value = values[propertyKey];
-                if(value) {
-                    break;
-                }
-            }
-        } else {
-            value = values[propertyKeys];
-        }
+        id value = [values valueForVariableKey:keys[propertyDescriptor.name]];
         if(!value || [value isKindOfClass:[NSNull class]]) {
             continue;
         }
@@ -186,14 +175,6 @@
 }
 
 #pragma mark - Utils
-
-+ (NSDictionary *)keysWithProperties:(NSSet *)properties {
-    NSMutableDictionary *keys = [NSMutableDictionary dictionary];
-    for(FJPropertyDescriptor *propertyDescriptor in properties) {
-        [keys setValue:propertyDescriptor.name forKey:propertyDescriptor.name];
-    }
-    return keys;
-}
 
 - (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property transformer:(NSValueTransformer *)transformer context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     id subitems = [transformer transformedValue:value];

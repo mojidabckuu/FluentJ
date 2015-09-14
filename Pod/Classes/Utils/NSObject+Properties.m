@@ -31,4 +31,14 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
     return keys;
 }
 
+#pragma mark - Utils
+
++ (NSDictionary *)keysWithProperties:(NSSet *)properties {
+    NSMutableDictionary *keys = [NSMutableDictionary dictionary];
+    for(FJPropertyDescriptor *propertyDescriptor in properties) {
+        [keys setValue:propertyDescriptor.name forKey:propertyDescriptor.name];
+    }
+    return keys;
+}
+
 @end

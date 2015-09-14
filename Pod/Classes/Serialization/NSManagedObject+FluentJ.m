@@ -21,6 +21,10 @@
 
 #import "NSObject+Update.h"
 
+#import "NSObject+KVC.h"
+
+NSString *const FJImportRelationshipKey = @"relatedByAttribute";
+
 @implementation NSManagedObject (FluentJ)
 
 #pragma mark - Import Private
@@ -29,9 +33,35 @@
     if(!value) {
         return nil;
     }
-    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
-    id item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
-    [item updateWithValue:value context:context userInfo:userInfo error:error];
+    __block id item = nil;
+    [context performBlockAndWait:^{
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
+        id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
+        NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
+        
+        NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:[self properties]];
+        
+        id relatedByValue = [value valueForVariableKey:keys[relatedBy]];
+        
+        if (primaryAttribute) {
+            NSFetchRequest *request = [[NSFetchRequest alloc] init];
+            [request setEntity:entityDescription];
+            [request setPredicate:[NSPredicate predicateWithFormat:@"%K = %@", relatedBy, relatedByValue]];
+            [request setFetchLimit:1];
+            __block NSArray *results = nil;
+            [context performBlockAndWait:^{
+                NSError *error = nil;
+                results = [context executeFetchRequest:request error:&error];
+                NSLog(@"ERROR: %@", error);
+            }];
+            item = results.count ? [results firstObject] : nil;
+        }
+        if (!item) {
+            item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
+        }
+        [item updateWithValue:value context:context userInfo:userInfo error:error];
+    }];
+    
     return item;
 }
 

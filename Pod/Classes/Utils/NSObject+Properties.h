@@ -15,4 +15,9 @@
  */
 + (NSSet *)properties;
 
+/**
+ Returns a dictionary of properies [NAME : NAME]
+ */
++ (NSDictionary *)keysWithProperties:(NSSet *)properties;
+
 @end
