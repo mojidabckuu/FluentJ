@@ -73,7 +73,13 @@
         return;
     }
     NSSet *properties = [[self class] properties];
-    NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:properties];
+    NSDictionary *keys = nil;
+    if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
+        keys = [[self class] keysForKeyPaths:userInfo];
+    }
+    if(!keys) {
+        keys = [[self class] keysWithProperties:properties];
+    }
     NSArray *allKeys = [keys allKeys];
     [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
@@ -166,12 +172,6 @@
 }
 
 - (void)didImportWithUserInfo:(NSDictionary *)userInfo {
-}
-
-#pragma mark - Serialization methods
-
-+ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo {
-    return nil;
 }
 
 #pragma mark - Utils
