@@ -21,8 +21,10 @@
                 break;
             }
         }
-    } else {
+    } else if([self isKindOfClass:[NSDictionary class]]) {
         value = [self valueForKey:key];
+    } else {
+        value = self;
     }
     return value;
 }
