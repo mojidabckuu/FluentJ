@@ -105,7 +105,7 @@
                     [subvalue updateWithValue:value context:context userInfo:subitemUserInfo error:error];
                     value = nil;
                 } else {
-                    value = [propertyDescriptor.typeClass importValue:value userInfo:subitemUserInfo error:error];
+                    value = [propertyDescriptor.typeClass importValue:value context:context userInfo:subitemUserInfo error:error];
                 }
             }
         }
