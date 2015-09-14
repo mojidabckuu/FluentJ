@@ -61,7 +61,11 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
         if (!item) {
             item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
         }
-        [item updateWithValue:value context:context userInfo:userInfo error:error];
+        NSDictionary *resultValue = value;
+        if(![value isKindOfClass:[NSDictionary class]]) {
+            resultValue = @{relatedBy : value};
+        }
+        [item updateWithValue:resultValue context:context userInfo:userInfo error:error];
     }];
     
     return item;
