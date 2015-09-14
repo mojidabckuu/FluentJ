@@ -15,13 +15,13 @@
  Transformers for value -> value
  Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}
  */
-+ (NSDictionary *)modelTransformers;
-+ (NSDictionary *)keysForKeyPaths:(NSDictionary *)userInfo;
++ (nonnull NSDictionary *)modelTransformers;
++ (nullable NSDictionary *)keysForKeyPaths:(nullable NSDictionary *)userInfo;
 
 /**
  Utils
  */
-- (void)willImportWithUserInfo:(NSDictionary *)userInfo;
-- (void)didImportWithUserInfo:(NSDictionary *)userInfo;
+- (void)willImportWithUserInfo:(nullable NSDictionary *)userInfo;
+- (void)didImportWithUserInfo:(nullable NSDictionary *)userInfo;
 
 @end
