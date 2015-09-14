@@ -130,6 +130,9 @@
             continue;
         }
         id value = [self valueForKey:propertyDescriptor.name];
+        if(!value) {
+            continue;
+        }
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
             NSMutableArray *subitems = [NSMutableArray array];
             for(id item in value) {
