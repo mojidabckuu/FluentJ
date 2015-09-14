@@ -15,6 +15,9 @@
         <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="VGCategory" inverseName="user" inverseEntity="VGCategory" syncable="YES"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="VGItem" inverseName="user" inverseEntity="VGItem" syncable="YES"/>
+        <userInfo>
+            <entry key="relatedByAttribute" value="firstName"/>
+        </userInfo>
     </entity>
     <elements>
         <element name="VGCategory" positionX="-36" positionY="9" width="128" height="75"/>
