@@ -19,7 +19,10 @@
  "firstName": "Marcella",
  "lastName": "Ericka",
  "name": "Sharlene Collier",
- "age": 32
+ "age": 32,
+ "category_model" : {
+ "name" : "Super name"
+ }
  },
  {
  "firstName": "Marina",

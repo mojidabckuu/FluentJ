@@ -82,7 +82,7 @@
         }
         id propertyKeys = keys[propertyDescriptor.name];
         id value = nil;
-        if([[propertyKeys class] isMutable]) {
+        if([propertyKeys isCollection]) {
             for(id propertyKey in propertyKeys) {
                 value = values[propertyKey];
                 if(value) {
