@@ -42,6 +42,15 @@
 
     NSDictionary *obj = [item exportWithUserInfo:nil error:&error];
     NSLog(@"%@", obj);
+    
+    id context = [NSManagedObjectContext MR_defaultContext];
+    NSArray *dbUsers = [VGUser importValue:json context:context userInfo:@{@"action" : @"index"} error:nil];
+    NSLog(@"dbUsers count: %@", @(dbUsers.count));
+    [context MR_saveToPersistentStoreAndWait];
+    
+    id dbUser = [VGUser importValue:@{@"firstName" : @"Kelly", @"isVIP" : @NO} context:context userInfo:@{@"action" : @"index"} error:nil];
+    NSLog(@"%@", dbUser);
+    
     return YES;
 }
 

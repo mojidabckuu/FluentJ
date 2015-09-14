@@ -52,7 +52,9 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
             [context performBlockAndWait:^{
                 NSError *error = nil;
                 results = [context executeFetchRequest:request error:&error];
-                NSLog(@"ERROR: %@", error);
+                if(error) {
+                    NSLog(@"ERROR: %@", error);
+                }
             }];
             item = results.count ? [results firstObject] : nil;
         }
