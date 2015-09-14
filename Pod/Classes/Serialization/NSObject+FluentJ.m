@@ -80,7 +80,18 @@
         if(![allKeys containsObject:propertyDescriptor.name]) {
             continue;
         }
-        id value = values[keys[propertyDescriptor.name]];
+        id propertyKeys = keys[propertyDescriptor.name];
+        id value = nil;
+        if([[propertyKeys class] isMutable]) {
+            for(id propertyKey in propertyKeys) {
+                value = values[propertyKey];
+                if(value) {
+                    break;
+                }
+            }
+        } else {
+            value = values[propertyKeys];
+        }
         if(!value || [value isKindOfClass:[NSNull class]]) {
             continue;
         }
