@@ -23,6 +23,8 @@
 
 #import "NSObject+KVC.h"
 
+#import "NSString+Capitalize.h"
+
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 @implementation NSManagedObject (FluentJ)
@@ -100,7 +102,7 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
             }
         }
         
-        NSString *addRelatedObjectToSetMessage = [NSString stringWithFormat:addRelationMessageFormat, [[relationshipDescription name] capitalizedString]];
+        NSString *addRelatedObjectToSetMessage = [NSString stringWithFormat:addRelationMessageFormat, [[relationshipDescription name] capitalizedStringWithIndex:0]];
         SEL selector = NSSelectorFromString(addRelatedObjectToSetMessage);
         
 #pragma clang diagnostic push
