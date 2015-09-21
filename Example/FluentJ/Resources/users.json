@@ -8,7 +8,15 @@
  "items" : [
  {
     "name" : "NAME1"
- }
+ },
+            {
+            "name" : "NAME2"
+            },
+            {
+            "name" : "NAME3"
+            }
+
+
  ],
  "category" : {
  "name" : "categoryname"
