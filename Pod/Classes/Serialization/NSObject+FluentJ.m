@@ -139,7 +139,8 @@
         if(!value) {
             continue;
         }
-        if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
+        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
+        if([value conformsToProtocol:@protocol(NSFastEnumeration)] && !transformer) {
             NSMutableArray *subitems = [NSMutableArray array];
             for(id item in value) {
                 NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
@@ -148,7 +149,6 @@
             }
             [json setObject:subitems forKey:keys[propertyDescriptor.name]];
         } else {
-            NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
             if(transformer) {
                 id transformedValue = [transformer reverseTransformedValue:value];
                 [json setObject:transformedValue forKey:keys[propertyDescriptor.name]];
