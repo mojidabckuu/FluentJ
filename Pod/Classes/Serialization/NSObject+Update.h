@@ -10,9 +10,13 @@
 
 @class FJPropertyDescriptor;
 
-@interface NSObject (Update)
+@protocol NSObjectImportProtocol <NSObject>
 
+@optional
 - (nullable id)importModelsWithValue:(nullable id)value property:(nullable FJPropertyDescriptor *)property transformer:(nullable NSValueTransformer *)transformer context:(nullable id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable*__nullable)error;
-- (void)exportValuesWithProperty:(nullable FJPropertyDescriptor *)property userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable*__nullable)error;
+
+@end
+
+@interface NSObject (Update)
 
 @end

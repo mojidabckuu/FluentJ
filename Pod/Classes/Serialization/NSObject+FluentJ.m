@@ -83,10 +83,11 @@
     NSArray *allKeys = [keys allKeys];
     [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
-        if(![allKeys containsObject:propertyDescriptor.name]) {
+        NSString *propertyName = propertyDescriptor.name;
+        if(![allKeys containsObject:propertyName]) {
             continue;
         }
-        id value = [values valueForVariableKey:keys[propertyDescriptor.name]];
+        id value = [values valueForVariableKey:keys[propertyName]];
         if(!value || [value isKindOfClass:[NSNull class]]) {
             continue;
         }
@@ -106,7 +107,7 @@
                 
                 value = [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
             } else {
-                id subvalue = [self valueForKey:propertyDescriptor.name];
+                id subvalue = [self valueForKey:propertyName];
                 if(subvalue) {
                     [subvalue updateWithValue:value context:context userInfo:subitemUserInfo error:error];
                     value = nil;
@@ -116,7 +117,7 @@
             }
         }
         if(value) {
-            [self setValue:value forKey:propertyDescriptor.name];
+            [self setValue:value forKey:propertyName];
         }
     }
     [self didImportWithUserInfo:userInfo];
@@ -128,7 +129,7 @@
     NSArray *valuesToExport = nil;
     BOOL isCollection = [self conformsToProtocol:@protocol(NSFastEnumeration)];
     if(isCollection) {
-        valuesToExport = self;
+        valuesToExport = (NSArray *)self;
     } else {
         valuesToExport = @[self];
     }
