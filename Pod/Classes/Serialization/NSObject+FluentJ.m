@@ -125,65 +125,87 @@
 #pragma mark - Export
 
 - (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError **)error {
-    NSMutableDictionary *json = [NSMutableDictionary dictionary];
-    NSSet *properties = [[self class] properties];
+    NSArray *valuesToExport = nil;
+    BOOL isCollection = [self conformsToProtocol:@protocol(NSFastEnumeration)];
+    if(isCollection) {
+        valuesToExport = self;
+    } else {
+        valuesToExport = @[self];
+    }
     
     NSDictionary *keys = nil;
     if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
-        keys = [[self class] keysForKeyPaths:userInfo];
+        keys = [[[valuesToExport firstObject] class] keysForKeyPaths:userInfo];
     }
-    if(!keys) {
-        keys = [[self class] keysWithProperties:properties];
-    }
-    NSArray *allKeys = [keys allKeys];
     
-    for(FJPropertyDescriptor *propertyDescriptor in properties) {
-        if(![allKeys containsObject:propertyDescriptor.name]) {
-            continue;
+    NSMutableArray *jsonValues = [NSMutableArray array];
+    
+    for(id valueToExport in valuesToExport) {
+        NSMutableDictionary *json = [NSMutableDictionary dictionary];
+        NSSet *properties = [[valueToExport class] properties];
+        
+        NSDictionary *keys = nil;
+        if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
+            keys = [[valueToExport class] keysForKeyPaths:userInfo];
         }
-        id value = [self valueForKey:propertyDescriptor.name];
-        if(!value) {
-            continue;
+        if(!keys) {
+            keys = [[valueToExport class] keysWithProperties:properties];
         }
-        id exportedValue = nil;
-        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
-        if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
-            NSMutableArray *subitems = [NSMutableArray array];
-            for(id item in value) {
-                NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
-                id subItemjson = nil;
+        NSArray *allKeys = [keys allKeys];
+        
+        for(FJPropertyDescriptor *propertyDescriptor in properties) {
+            NSString *propertyName = propertyDescriptor.name;
+            if(![allKeys containsObject:propertyName]) {
+                continue;
+            }
+            id value = [valueToExport valueForKey:propertyName];
+            if(!value) {
+                continue;
+            }
+            id exportedValue = nil;
+            NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor];
+            if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
+                NSMutableArray *subitems = nil;
                 if(transformer) {
-                    subItemjson = [transformer reverseTransformedValue:item];
+                    subitems = [transformer reverseTransformedValue:value];
                 } else {
-                    subItemjson = [item exportWithUserInfo:subitemUserInfo error:error];
+                    subitems = [NSMutableArray array];
+                    for(id item in value) {
+                        NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+                        id subItemjson = [item exportWithUserInfo:subitemUserInfo error:error];
+                        [subitems addObject:subItemjson];
+                    }
                 }
-                [subitems addObject:subItemjson];
-            }
-            exportedValue = subitems;
-        } else {
-            if(transformer) {
-                exportedValue = [transformer reverseTransformedValue:value];
+                exportedValue = subitems;
             } else {
-                NSString *classString = NSStringFromClass([self class]);
-                NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:classString];
-                exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
+                if(transformer) {
+                    exportedValue = [transformer reverseTransformedValue:value];
+                } else {
+                    NSString *classString = NSStringFromClass([valueToExport class]);
+                    NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:classString];
+                    exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
+                }
             }
-        }
-        if([exportedValue isKindOfClass:[NSArray class]]) {
-            // TODO: remove stange statement
-            if(![userInfo[@"flatten"] boolValue]) {
-            } else {
-                NSDictionary *first = [exportedValue firstObject];
-                NSArray *keys = [first allKeys];
-                NSString *flattenKey = keys.count > 1 ? userInfo[@"flattenKey"] : [keys firstObject];
-                NSString *formatString = [NSString stringWithFormat:@"@unionOfObjects.%@", flattenKey];
-                exportedValue = [exportedValue valueForKeyPath:formatString];
+            if([exportedValue isKindOfClass:[NSArray class]]) {
+                // TODO: remove stange statement
             }
+            [json setObject:exportedValue forKey:keys[propertyName]];
         }
-        [json setObject:exportedValue forKey:keys[propertyDescriptor.name]];
+        [jsonValues addObject:json];
     }
-    return json;
-}
+    
+    if(!isCollection) {
+        return [jsonValues lastObject];
+    }
+    if(![userInfo[@"flatten"] boolValue]) {
+    } else {
+        NSDictionary *first = [jsonValues firstObject];
+        NSArray *dictionaryKeys = [first allKeys];
+        NSString *flattenKey = dictionaryKeys.count > 1 ? keys[userInfo[@"flattenKey"]] : [dictionaryKeys firstObject];
+        NSString *formatString = [NSString stringWithFormat:@"@unionOfObjects.%@", flattenKey];
+        jsonValues = [jsonValues valueForKeyPath:formatString];
+    }
+    return jsonValues;}
 
 + (NSMutableDictionary *)modelTransformers {
     return [NSMutableDictionary dictionary];
