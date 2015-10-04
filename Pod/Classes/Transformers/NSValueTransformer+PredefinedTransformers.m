@@ -26,7 +26,7 @@ NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
         } else if([boolean isKindOfClass:NSString.class]) {
             NSArray *boolTrueValues = @[@"y", @"yes", @"true", @"1"];
             NSArray *boolFalseValue = @[@"n", @"no", @"false", @"0"];
-            if([boolTrueValues containsObject:boolean]) {
+            if([boolTrueValues containsObject:[boolean lowercaseString]]) {
                 return (NSNumber *)kCFBooleanTrue;
             } else if([boolFalseValue containsObject:boolean]) {
                 return (NSNumber *)kCFBooleanFalse;
