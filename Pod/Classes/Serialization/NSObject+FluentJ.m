@@ -94,7 +94,9 @@
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
         NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
         if(transformer && !isCollection) {
-            value = [transformer transformedValue:value];
+            if(![value isKindOfClass:propertyDescriptor.typeClass]) {
+                value = [transformer transformedValue:value];
+            }
         } else {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
             if(isCollection) {
