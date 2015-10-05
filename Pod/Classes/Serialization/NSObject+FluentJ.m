@@ -93,10 +93,12 @@
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
         NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
+        if([value isKindOfClass:propertyDescriptor.typeClass] && !transformer) {
+            [self setValue:value forKey:propertyName];
+            continue;
+        }
         if(transformer && !isCollection) {
-            if(![value isKindOfClass:propertyDescriptor.typeClass]) {
-                value = [transformer transformedValue:value];
-            }
+            value = [transformer transformedValue:value];
         } else {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
             if(isCollection) {
@@ -189,10 +191,9 @@
                     exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
                 }
             }
-            if([exportedValue isKindOfClass:[NSArray class]]) {
-                // TODO: remove stange statement
-            }
-            [json setObject:exportedValue forKey:keys[propertyName]];
+            id keysArray = keys[propertyName];
+            NSString *key = [keysArray isKindOfClass:[NSArray class]] ? [keysArray firstObject] : keysArray;
+            [json setObject:exportedValue forKey:key];
         }
         [jsonValues addObject:json];
     }
