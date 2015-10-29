@@ -36,6 +36,7 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
         return nil;
     }
     __block id item = nil;
+    __block id resultValue = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
@@ -63,12 +64,12 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
         if (!item) {
             item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
         }
-        NSDictionary *resultValue = value;
+        resultValue = value;
         if(![value isKindOfClass:[NSDictionary class]]) {
             resultValue = @{relatedBy : value};
         }
-        [item updateWithValue:resultValue context:context userInfo:userInfo error:error];
     }];
+    [item updateWithValue:resultValue context:context userInfo:userInfo error:error];
     
     return item;
 }
