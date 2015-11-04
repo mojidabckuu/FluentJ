@@ -199,7 +199,9 @@
             }
             id keysArray = keys[propertyName];
             NSString *key = [keysArray isKindOfClass:[NSArray class]] ? [keysArray firstObject] : keysArray;
-            [json setObject:exportedValue forKey:key];
+            if(exportedValue) {
+                [json setObject:exportedValue forKey:key];
+            }
         }
         [jsonValues addObject:json];
     }
