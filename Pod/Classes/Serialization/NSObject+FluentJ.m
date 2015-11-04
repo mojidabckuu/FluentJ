@@ -142,7 +142,7 @@
     if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
         Class modelClass = nil;
         if([valuesToExport isKindOfClass:[NSSet class]]) {
-            modelClass = [[[(NSSet *)valuesToExport allObjects] firstObject] modelClass];
+            modelClass = [[[(NSSet *)valuesToExport allObjects] firstObject] class];
         } else {
             modelClass = [[valuesToExport firstObject] class];
         }
