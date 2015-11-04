@@ -140,7 +140,13 @@
     
     NSDictionary *keys = nil;
     if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
-        keys = [[[valuesToExport firstObject] class] keysForKeyPaths:userInfo];
+        Class modelClass = nil;
+        if([valuesToExport isKindOfClass:[NSSet class]]) {
+            modelClass = [[[(NSSet *)valuesToExport allObjects] firstObject] modelClass];
+        } else {
+            modelClass = [[valuesToExport firstObject] class];
+        }
+        keys = [modelClass keysForKeyPaths:userInfo];
     }
     
     NSMutableArray *jsonValues = [NSMutableArray array];
