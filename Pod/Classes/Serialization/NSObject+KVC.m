@@ -14,12 +14,23 @@
 
 - (id)valueForVariableKey:(id)key {
     id value = nil;
-    if([key isCollection]) {
+    NSArray *simpleClasses = @[[NSString class], [NSNumber class], [NSData class]];
+    BOOL simple = false;
+    for(Class simpleClass in simpleClasses) {
+        simple = [self isKindOfClass:simpleClass];
+        if(simple) {
+            break;
+        }
+    }
+    if([key isCollection] && !simple) {
         for(id subkey in key) {
-            value = [self valueForKey:subkey];
-            if(value) {
-                break;
-            }
+            SEL selector = NSSelectorFromString(subkey);
+//            if([self respondsToSelector:NSSelectorFromString(subkey)]) {
+                value = [self valueForKey:subkey];
+                if(value) {
+                    break;
+                }
+//            }
         }
     } else if([self isKindOfClass:[NSDictionary class]]) {
         value = [self valueForKey:key];
