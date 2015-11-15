@@ -45,7 +45,7 @@
 
 + (id)_importValues:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     if(![values count]) {
-        return nil;
+        return values;
     }
     NSMutableArray *items = [NSMutableArray array];
     for(id value in values) {
