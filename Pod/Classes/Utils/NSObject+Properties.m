@@ -34,9 +34,20 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
 #pragma mark - Utils
 
 + (NSDictionary *)keysWithProperties:(NSSet *)properties {
+    return [self keysWithProperties:properties sneak:NO];
+}
+
++ (NSDictionary *)keysWithProperties:(NSSet *)properties sneak:(BOOL)sneak {
     NSMutableDictionary *keys = [NSMutableDictionary dictionary];
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([a-z])([A-Z])" options:NSRegularExpressionCaseInsensitive error:&error];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
-        [keys setValue:propertyDescriptor.name forKey:propertyDescriptor.name];
+        NSString *value = propertyDescriptor.name;
+        if(sneak) {
+            NSRange range = NSMakeRange(0, [propertyDescriptor.name length]);
+            value = [regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"];
+        }
+        [keys setValue:value forKey:propertyDescriptor.name];
     }
     return keys;
 }

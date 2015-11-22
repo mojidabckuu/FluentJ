@@ -20,4 +20,9 @@
  */
 + (NSDictionary *)keysWithProperties:(NSSet *)properties;
 
+/**
+ Returns a dictionary of properies [fileName : file_name]
+ */
++ (NSDictionary *)keysWithProperties:(NSSet *)properties sneak:(BOOL)sneak;
+
 @end

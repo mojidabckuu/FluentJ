@@ -11,3 +11,5 @@
 #import "FJModelValueTransformer.h"
 #import "FJValueTransformer.h"
 #import "NSValueTransformer+PredefinedTransformers.h"
+
+#import "NSObject+Properties.h"
