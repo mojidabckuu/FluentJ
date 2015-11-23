@@ -14,7 +14,8 @@
     Class cls = self;
     BOOL stop = NO;
     
-    while (!stop && ![cls isEqual:NSObject.class]) {
+    Class managedClass = NSClassFromString(@"NSManagedObject");
+    while (!stop && !([cls isEqual:NSObject.class] || [cls isSubclassOfClass:managedClass])) {
         unsigned count = 0;
         objc_property_t *properties = class_copyPropertyList(cls, &count);
         

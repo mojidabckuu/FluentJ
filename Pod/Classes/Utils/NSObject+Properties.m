@@ -45,7 +45,7 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
         NSString *value = propertyDescriptor.name;
         if(sneak) {
             NSRange range = NSMakeRange(0, [propertyDescriptor.name length]);
-            value = [regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"];
+            value = [[regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"] lowercaseString];
         }
         [keys setValue:value forKey:propertyDescriptor.name];
     }
