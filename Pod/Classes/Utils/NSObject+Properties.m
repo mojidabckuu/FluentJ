@@ -40,7 +40,7 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
 + (NSDictionary *)keysWithProperties:(NSSet *)properties sneak:(BOOL)sneak {
     NSMutableDictionary *keys = [NSMutableDictionary dictionary];
     NSError *error = nil;
-    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([a-z])([A-Z])" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"([a-z])([A-Z])" options:0 error:&error];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *value = propertyDescriptor.name;
         if(sneak) {
