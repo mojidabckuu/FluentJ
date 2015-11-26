@@ -27,6 +27,7 @@
     self = [super init];
     if(self) {
         self.identifierKeyPathName = @"id";
+        self.simpleClasses = [NSMutableArray array];
     }
     return self;
 }
