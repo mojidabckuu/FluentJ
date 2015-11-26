@@ -8,7 +8,7 @@
 
 #import "NSObject+Definition.h"
 
-#import "FJSimpleClassCache.h"
+#import "FluentJConfiguration.h"
 
 BOOL FJSimpleClass(Class class) {
     BOOL simple = [class customClass];
@@ -17,7 +17,7 @@ BOOL FJSimpleClass(Class class) {
         if([classString hasPrefix:@"NS"] || [classString hasPrefix:@"UI"]) {
             return TRUE;
         }
-        if([[FJSimpleClassCache simpleModels] containsObject:class]) {
+        if([[[FluentJConfiguration sharedInstance] simpleClasses] containsObject:class]) {
             return TRUE;
         }
     }
