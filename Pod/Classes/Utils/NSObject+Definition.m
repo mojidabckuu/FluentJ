@@ -27,7 +27,7 @@ BOOL FJSimpleClass(Class class) {
 @implementation NSObject (Definition)
 
 + (BOOL)customClass {
-    return YES;
+    return NO;
 }
 
 @end
