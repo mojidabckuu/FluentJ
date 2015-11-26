@@ -16,24 +16,6 @@ typedef enum {
     FJARCPolicyCopy
 } FJARCPolicy;
 
-
-//typedef struct {
-//    BOOL nonatomic;
-//    BOOL readonly;
-//    BOOL weak;
-//    BOOL dynamic;
-//    BOOL canBeCollected;
-//    FJPropertyMemoryManagementPolicy memoryManagementPolicy;
-//    SEL getter;
-//    SEL setter;
-//    const char *ivar;
-//    Class typeClass;
-//    char type[];
-//    
-//} FJPropertyDescriptor;
-
-//FJPropertyDescriptor *propertyDescriptorWithProperty(objc_property_t property);
-
 @interface FJPropertyDescriptor : NSObject
 
 @property (nonatomic, assign, getter=isNonatomic) BOOL nonatomic;
