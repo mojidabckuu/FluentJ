@@ -9,8 +9,10 @@
 #import "NSObject+PredefinedTransformers.h"
 
 #import "NSObject+FluentJ.h"
+#import "NSObject+Class.h"
 
 #import "NSValueTransformer+PredefinedTransformers.h"
+#import "FJModelValueTransformer.h"
 
 #import "FJPropertyDescriptor.h"
 
@@ -27,6 +29,8 @@
                 transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformer];
             } else if(propertyDescriptor.typeClass == NSString.class) {
                 transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
+            } else if(!FJSimpleClass(propertyDescriptor.typeClass)) {
+                transformer = [FJModelValueTransformer transformerWithModelClass:propertyDescriptor.typeClass];
             }
         } else if(propertyDescriptor.type != NULL) {
             if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
