@@ -9,6 +9,7 @@
 #import "NSObject+Properties.h"
 
 #import "NSObject+Class.h"
+#import "NSObject+Definition.h"
 #import "NSString+Capitalize.h"
 
 #import "FJPropertyDescriptor.h"
@@ -16,6 +17,20 @@
 #import "FluentJConfiguration.h"
 
 static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
+
+BOOL FJSimpleClass(Class class) {
+    BOOL custom = [class customClass];
+    if(!custom) {
+        NSString *classString = NSStringFromClass(class);
+        if([classString hasPrefix:@"NS"] || [classString hasPrefix:@"UI"]) {
+            return TRUE;
+        }
+        if([[[FluentJConfiguration sharedInstance] simpleClasses] containsObject:class]) {
+            return TRUE;
+        }
+    }
+    return !custom;
+}
 
 @implementation NSObject (Properties)
 
@@ -50,9 +65,13 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
         if(sneak) {
             NSRange range = NSMakeRange(0, [propertyDescriptor.name length]);
             value = [[regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"] lowercaseString];
-            value = [NSString stringWithFormat:@"%@_%@", value, identifierString];
+            if(!FJSimpleClass(propertyDescriptor.typeClass)) {
+                value = [NSString stringWithFormat:@"%@_%@", value, identifierString];
+            }
         } else {
-            value = [NSString stringWithFormat:@"%@%@", value, [identifierString capitalizedStringWithIndex:0]];
+            if(!FJSimpleClass(propertyDescriptor.typeClass)) {
+                value = [NSString stringWithFormat:@"%@%@", value, [identifierString capitalizedStringWithIndex:0]];
+            }
         }
         [keys setValue:value forKey:propertyDescriptor.name];
     }

@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-BOOL FJSimpleClass(Class class);
-
 @interface NSObject (Definition)
 
 + (BOOL)customClass;

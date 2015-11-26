@@ -25,34 +25,36 @@
     
     [MagicalRecord setupCoreDataStack];
     
-    NSString *filepath = [[NSBundle mainBundle] pathForResource:@"users" ofType:@"json"];
-    NSData *data = [NSData dataWithContentsOfFile:filepath];
-    NSError *error = nil;
-    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//    NSString *filepath = [[NSBundle mainBundle] pathForResource:@"users" ofType:@"json"];
+//    NSData *data = [NSData dataWithContentsOfFile:filepath];
+//    NSError *error = nil;
+//    id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+//    
+//    NSArray *items = [User importValue:json userInfo:@{@"action" : @"index"} error:nil];
+//    NSLog(@"%@", items);
+//    
+//    id item = [items firstObject];
+//    NSDictionary *userDictionary = @{@"firstName" : @"Vlad",
+//                                     @"lastName" : @"Gorbenko"};
+//
+//    [item updateWithValue:userDictionary context:nil userInfo:nil error:nil];
+//    NSLog(@"%@", item);
+//    
+//    NSDictionary *jsonItem = [item exportWithUserInfo:@{@"flatten" : @YES} error:nil];
+//    NSLog(@"json : %@", jsonItem);
+//
+//    NSDictionary *obj = [item exportWithUserInfo:nil error:&error];
+//    NSLog(@"%@", obj);
+//    
+//    id context = [NSManagedObjectContext MR_defaultContext];
+//    NSArray *dbUsers = [VGUser importValue:json context:context userInfo:@{@"action" : @"index"} error:nil];
+//    NSLog(@"dbUsers count: %@", @(dbUsers.count));
+//    [context MR_saveToPersistentStoreAndWait];
+//    
+//    id dbUser = [VGUser importValue:@{@"firstName" : @"Kelly", @"isVIP" : @NO} context:context userInfo:@{@"action" : @"index"} error:nil];
+//    NSLog(@"%@", dbUser);
     
-    NSArray *items = [User importValue:json userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"%@", items);
-    
-    id item = [items firstObject];
-    NSDictionary *userDictionary = @{@"firstName" : @"Vlad",
-                                     @"lastName" : @"Gorbenko"};
-
-    [item updateWithValue:userDictionary context:nil userInfo:nil error:nil];
-    NSLog(@"%@", item);
-    
-    NSDictionary *jsonItem = [item exportWithUserInfo:@{@"flatten" : @YES} error:nil];
-    NSLog(@"json : %@", jsonItem);
-
-    NSDictionary *obj = [item exportWithUserInfo:nil error:&error];
-    NSLog(@"%@", obj);
-    
-    id context = [NSManagedObjectContext MR_defaultContext];
-    NSArray *dbUsers = [VGUser importValue:json context:context userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"dbUsers count: %@", @(dbUsers.count));
-    [context MR_saveToPersistentStoreAndWait];
-    
-    id dbUser = [VGUser importValue:@{@"firstName" : @"Kelly", @"isVIP" : @NO} context:context userInfo:@{@"action" : @"index"} error:nil];
-    NSLog(@"%@", dbUser);
+    NSDictionary *keys = [User keysWithProperties:[User properties] sneak:YES];
     
     return YES;
 }
