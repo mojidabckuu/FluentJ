@@ -30,4 +30,9 @@
  */
 - (nullable id)exportWithUserInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
+/**
+ Convert Values -> JSON
+ */
++ (nullable id)exportValue:(nullable id)value userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
+
 @end
