@@ -12,6 +12,6 @@
 
 @interface NSObject (PredefinedTransformers)
 
-+ (nonnull NSValueTransformer *)transformerWithPropertyDescriptor:(nonnull FJPropertyDescriptor *)propertyDescriptor;
++ (nonnull NSValueTransformer *)transformerWithPropertyDescriptor:(nonnull FJPropertyDescriptor *)propertyDescriptor userInfo:(nullable NSDictionary *)userInfo;
 
 @end

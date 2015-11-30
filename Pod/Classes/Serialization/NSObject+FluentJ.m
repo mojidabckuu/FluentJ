@@ -92,7 +92,7 @@
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor];
+        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:values];
         if([value isKindOfClass:propertyDescriptor.typeClass] && !transformer) {
             [self setValue:value forKey:propertyName];
             continue;
@@ -181,6 +181,10 @@
     return [NSMutableDictionary dictionary];
 }
 
++ (nonnull NSDictionary *)modelTransformersWithUserInfo:(NSDictionary *)userInfo {
+    return [self modelTransformers];
+}
+
 #pragma mark - Notifications
 
 - (void)willImportWithUserInfo:(NSDictionary *)userInfo {
@@ -235,7 +239,7 @@
             continue;
         }
         id exportedValue = nil;
-        NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor];
+        NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:valueToExport];
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
             NSMutableArray *subitems = nil;
             if(transformer) {

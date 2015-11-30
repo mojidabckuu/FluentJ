@@ -16,6 +16,7 @@
  Should return a dictionary with format @{"PROPERTY NAME" : TRANSFORMER}
  */
 + (nonnull NSDictionary *)modelTransformers;
++ (nonnull NSDictionary *)modelTransformersWithUserInfo:(NSDictionary *)userInfo;
 + (nullable NSDictionary *)keysForKeyPaths:(nullable NSDictionary *)userInfo;
 
 /**

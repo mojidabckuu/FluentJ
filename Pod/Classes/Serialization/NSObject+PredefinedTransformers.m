@@ -18,8 +18,8 @@
 
 @implementation NSObject (PredefinedTransformers)
 
-+ (NSValueTransformer *)transformerWithPropertyDescriptor:(FJPropertyDescriptor *)propertyDescriptor {
-    NSDictionary *transformers = [self modelTransformers];
++ (NSValueTransformer *)transformerWithPropertyDescriptor:(FJPropertyDescriptor *)propertyDescriptor userInfo:(nullable NSDictionary *)userInfo {
+    NSDictionary *transformers = [self modelTransformersWithUserInfo:userInfo];
     NSValueTransformer *transformer = transformers[propertyDescriptor.name];
     if(!transformer) {
         if(propertyDescriptor.typeClass != nil) {
