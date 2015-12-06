@@ -209,7 +209,7 @@
             NSMutableArray *newValues = [NSMutableArray array];
             [newValues addObjectsFromArray:[oldValue allObjects]];
             [newValues addObjectsFromArray:subitems];
-            value = [[[oldValue class] alloc] initWithArray:newValues];
+            value = [newValues copy];
         }
     } else {
         value = [[property.typeClass alloc] initWithArray:subitems];
