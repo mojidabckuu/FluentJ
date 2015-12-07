@@ -25,6 +25,8 @@
 
 #import "NSString+Capitalize.h"
 
+#import "NSobject+ClassIdentifier.h"
+
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 @implementation NSManagedObject (FluentJ)
@@ -89,7 +91,7 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
     __block id item = nil;
 //    __block id resultValue = nil;
     [context performBlockAndWait:^{
-        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass([model class]) inManagedObjectContext:context];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
         NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
         
