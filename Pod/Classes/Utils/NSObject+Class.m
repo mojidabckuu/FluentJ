@@ -8,13 +8,31 @@
 
 #import "NSObject+Class.h"
 
+#import "NSObject+Definition.h"
+#import "FluentJConfiguration.h"
+
+BOOL FJSimpleClass(Class class) {
+    BOOL custom = [class customClass];
+    if(!custom) {
+        NSString *classString = NSStringFromClass(class);
+        if([classString hasPrefix:@"NS"] || [classString hasPrefix:@"UI"]) {
+            return TRUE;
+        }
+        if([[[FluentJConfiguration sharedInstance] simpleClasses] containsObject:class]) {
+            return TRUE;
+        }
+    }
+    return !custom;
+}
+
 @implementation NSObject (Class)
 
 + (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property, BOOL *stop))block {
     Class cls = self;
     BOOL stop = NO;
     
-    while (!stop && ![cls isEqual:NSObject.class]) {
+    Class managedClass = NSClassFromString(@"NSManagedObject");
+    while (!stop && !([cls isEqual:NSObject.class] || [cls isSubclassOfClass:managedClass])) {
         unsigned count = 0;
         objc_property_t *properties = class_copyPropertyList(cls, &count);
         

@@ -14,4 +14,8 @@
     return @{@"name" : @"name"};
 }
 
++ (BOOL)customClass {
+    return YES;
+}
+
 @end

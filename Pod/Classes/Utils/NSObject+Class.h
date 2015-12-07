@@ -10,6 +10,8 @@
 
 #import <objc/runtime.h>
 
+BOOL FJSimpleClass(Class class);
+
 @interface NSObject (Class)
 
 + (void)enumeratePropertiesUsingBlock:(void (^)(objc_property_t property, BOOL *stop))block;

@@ -13,3 +13,6 @@
 #import "NSValueTransformer+PredefinedTransformers.h"
 
 #import "NSObject+Properties.h"
+#import "NSObject+Definition.h"
+
+#import "FluentJConfiguration.h"
