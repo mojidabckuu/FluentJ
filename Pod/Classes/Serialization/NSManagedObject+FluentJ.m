@@ -29,6 +29,16 @@
 
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
+Class FJClassFromString(NSString *className) {
+    Class cls = NSClassFromString(className);
+    if (cls == nil) {
+        NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleExecutable"];
+        className = [NSString stringWithFormat:@"%@.%@", appName, className];
+        cls = NSClassFromString(className);
+    }
+    return cls;
+}
+
 @implementation NSManagedObject (FluentJ)
 
 #pragma mark - Import Private
@@ -124,6 +134,66 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
     //    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
     [item updateWithModel:model context:context userInfo:userInfo error:error];
     return item;
+}
+
++ (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
+    NSEntityDescription *entity = object.entity;
+    id model = [[FJClassFromString(entity.name) alloc] init];
+    
+    NSDictionary *managedObjectProperties = entity.propertiesByName;
+    NSSet *properties = [[object class] properties];
+    [self willImportWithUserInfo:userInfo];
+    for(FJPropertyDescriptor *propertyDescriptor in properties) {
+        NSString *propertyName = propertyDescriptor.name;
+        if(!managedObjectProperties[propertyName]) {
+            continue;
+        }
+        id value = [object valueForVariableKey:propertyName];
+        if(!value || [value isKindOfClass:[NSNull class]]) {
+            continue;
+        }
+        id attributeDescriptor = managedObjectProperties[propertyName];
+        BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
+        NSValueTransformer *transformer = [[model class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
+        NSDictionary *bindings = @{@(NSInteger16AttributeType) : NSNumber.class,
+                                   @(NSInteger32AttributeType) : NSNumber.class,
+                                   @(NSInteger64AttributeType) : NSNumber.class,
+                                   @(NSDecimalAttributeType) : NSNumber.class,
+                                   @(NSDoubleAttributeType) : NSNumber.class,
+                                   @(NSFloatAttributeType) : NSNumber.class,
+                                   @(NSStringAttributeType) : NSString.class,
+                                   @(NSBooleanAttributeType) : NSNumber.class,
+                                   @(NSDateAttributeType) : NSDate.class,
+                                   @(NSTransformableAttributeType) : [value class]};
+        if([attributeDescriptor isKindOfClass:[NSAttributeDescription class]]) {
+            if([value isKindOfClass:bindings[@([attributeDescriptor attributeType])]] && !transformer) {
+                [self setValue:value forKey:propertyName];
+                continue;
+            }
+            if(transformer) {
+                value = [transformer reverseTransformedValue:value];
+            }
+        } else if([attributeDescriptor isKindOfClass:[NSRelationshipDescription class]]) {
+            NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([model class])];
+            if(isCollection) {
+                NSMutableArray *subitems = [NSMutableArray array];
+                for(id subvalue in value) {
+                    id subitem = [[self class] modelFromManagedObject:subvalue context:context userInfo:subitemUserInfo error:error];
+                    [subitems addObject:subitem];
+                }
+            } else {
+                id subvalue = [self valueForKey:propertyName];
+                if(subvalue) {
+                    [self setValue:nil forKey:propertyName];
+                }
+                value = [[self class] modelFromManagedObject:subvalue context:context userInfo:subitemUserInfo error:error];
+            }
+        }
+        if(value) {
+            [self setValue:value forKey:propertyName];
+        }
+    }
+    return model;
 }
 
 - (void)updateWithModel:(nonnull id)model context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing  _Nullable *)error {

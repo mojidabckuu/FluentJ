@@ -21,6 +21,7 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		B5E4EAD5056898656E27CC8A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210F564983F5E61CDA3C7FA8 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D2F7113965E4D8504499C372 /* Pods_FluentJ_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49B4CA3713852515D321076 /* Pods_FluentJ_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F53A96521BA1619D008AD145 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = F53A964D1BA1619D008AD145 /* Item.m */; };
 		F53A96531BA1619D008AD145 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = F53A964F1BA1619D008AD145 /* User.m */; };
@@ -99,6 +100,7 @@
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
 				D2F7113965E4D8504499C372 /* Pods_FluentJ_Example.framework in Frameworks */,
+				B5E4EAD5056898656E27CC8A /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +276,8 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
+				5E2F8E9445B9407206123D11 /* Embed Pods Frameworks */,
+				AE0579274FBC6E9866C332C8 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -362,6 +366,36 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		5E2F8E9445B9407206123D11 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AE0579274FBC6E9866C332C8 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-FluentJ_Example/Pods-FluentJ_Example-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		CF138FD1D64FAB7E9A1BE35B /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

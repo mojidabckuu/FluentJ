@@ -8,6 +8,5 @@ end
 
 target 'FluentJ_Tests', :exclusive => true do
   pod "FluentJ", :path => "../"
-
   
 end
