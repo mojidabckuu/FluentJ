@@ -40,7 +40,8 @@
 }
 
 - (id)reverseTransformedValue:(id)value {
-    return [value exportWithUserInfo:self.userInfo error:nil];
+    NSError *error = nil;
+    return [value exportWithUserInfo:self.userInfo error:&error];
 }
 
 @end
