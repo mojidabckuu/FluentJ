@@ -10,6 +10,8 @@
 
 #import "NSObject+FluentJ.h"
 
+extern NSString *const FJDirectMappingKey;
+
 @interface NSManagedObject (FluentJ)
 
 + (nullable id)importValue:(nullable id)value userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error NS_UNAVAILABLE;

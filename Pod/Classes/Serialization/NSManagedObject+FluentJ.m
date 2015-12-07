@@ -29,6 +29,8 @@
 
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
+NSString *const FJDirectMappingKey = @"directMapping";
+
 Class FJClassFromString(NSString *className) {
     Class cls = NSClassFromString(className);
     if (cls == nil) {
@@ -97,7 +99,7 @@ Class FJClassFromString(NSString *className) {
 + (nullable id)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
-    fullUserInfo[@"managedMapping"] = @YES;
+    fullUserInfo[FJDirectMappingKey] = @YES;
     __block id item = nil;
     //    __block id resultValue = nil;
     [context performBlockAndWait:^{
