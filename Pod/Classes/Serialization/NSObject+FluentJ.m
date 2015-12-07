@@ -92,7 +92,7 @@
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:values];
+        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
         if([value isKindOfClass:propertyDescriptor.typeClass] && !transformer) {
             [self setValue:value forKey:propertyName];
             continue;

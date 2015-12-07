@@ -22,7 +22,9 @@
             break;
         }
     }
-    if([key isCollection] && !simple) {
+    if([self respondsToSelector:@selector(key)]) {
+        value = [self valueForKey:key];
+    } else if([key isCollection] && !simple) {
         for(id subkey in key) {
             SEL selector = NSSelectorFromString(subkey);
 //            if([self respondsToSelector:NSSelectorFromString(subkey)]) {
