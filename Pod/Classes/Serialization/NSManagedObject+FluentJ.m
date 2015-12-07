@@ -84,20 +84,18 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 #pragma mark - ManagedObject transform
 
-+ (nullable id)managedObjectFromModel:(nonnull id)model context:(id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
++ (nullable id)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
     fullUserInfo[@"managedMapping"] = @YES;
     __block id item = nil;
-//    __block id resultValue = nil;
+    //    __block id resultValue = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
         NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
         
-        NSDictionary *keys = [[model class] keysForKeyPaths:userInfo] ?: [[model class] keysWithProperties:[[model class] properties]];
-        
-        id relatedByValue = [model valueForVariableKey:keys[relatedBy]];
+        id relatedByValue = [model valueForVariableKey:relatedBy];
         
         if (primaryAttribute) {
             NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -116,68 +114,73 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
         }
         if (!item) {
             item = [NSEntityDescription insertNewObjectForEntityForName:entityDescription.name inManagedObjectContext:context];
-//            item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
+            //            item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
         }
-//        resultValue = value;
-//        if(![value isKindOfClass:[NSDictionary class]]) {
-//            resultValue = @{relatedBy : value};
-//        }
+        //        resultValue = value;
+        //        if(![value isKindOfClass:[NSDictionary class]]) {
+        //            resultValue = @{relatedBy : value};
+        //        }
     }];
-    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
-    [object updateWithModel:model context:context userInfo:userInfo error:error];
-    return object;
+    //    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
+    [item updateWithModel:model context:context userInfo:userInfo error:error];
+    return item;
 }
 
 - (void)updateWithModel:(nonnull id)model context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing  _Nullable *)error {
     NSEntityDescription *entity = self.entity;
     NSDictionary *managedObjectProperties = entity.propertiesByName;
-    
     NSSet *properties = [[model class] properties];
-    NSDictionary *keys = nil;
-    if([[model class] respondsToSelector:@selector(keysForKeyPaths:)]) {
-        keys = [[model class] keysForKeyPaths:userInfo];
-    }
-    if(!keys) {
-        keys = [[model class] keysWithProperties:properties];
-    }
-    NSArray *allKeys = [keys allKeys];
     [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *propertyName = propertyDescriptor.name;
-        if(![allKeys containsObject:propertyName]) {
+        if(!managedObjectProperties[propertyName]) {
             continue;
         }
-        id value = [model valueForVariableKey:keys[propertyName]];
+        id value = [model valueForVariableKey:propertyName];
         if(!value || [value isKindOfClass:[NSNull class]]) {
             continue;
         }
+        id attributeDescriptor = managedObjectProperties[propertyName];
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
         NSValueTransformer *transformer = [[model class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
-        if([value isKindOfClass:propertyDescriptor.typeClass] && !transformer) {
-            [self setValue:value forKey:propertyName];
-            continue;
-        }
-        if(transformer && !isCollection) {
-            value = [transformer transformedValue:value];
-        } else {
+        NSDictionary *bindings = @{@(NSInteger16AttributeType) : NSNumber.class,
+                                   @(NSInteger32AttributeType) : NSNumber.class,
+                                   @(NSInteger64AttributeType) : NSNumber.class,
+                                   @(NSDecimalAttributeType) : NSNumber.class,
+                                   @(NSDoubleAttributeType) : NSNumber.class,
+                                   @(NSFloatAttributeType) : NSNumber.class,
+                                   @(NSStringAttributeType) : NSString.class,
+                                   @(NSBooleanAttributeType) : NSNumber.class,
+                                   @(NSDateAttributeType) : NSDate.class,
+                                   @(NSTransformableAttributeType) : [value class]};
+        if([attributeDescriptor isKindOfClass:[NSAttributeDescription class]]) {
+            if([value isKindOfClass:bindings[@([attributeDescriptor attributeType])]] && !transformer) {
+                [self setValue:value forKey:propertyName];
+                continue;
+            }
+            if(transformer) {
+                value = [transformer reverseTransformedValue:value];
+            }
+        } else if([attributeDescriptor isKindOfClass:[NSRelationshipDescription class]]) {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([model class])];
             if(isCollection) {
-                NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
-                if([transformer isKindOfClass:FJModelValueTransformer.class]) {
-                    FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
-                    modelTransformer.userInfo = subitemUserInfo;
-                    modelTransformer.context = context;
+                //                NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
+                //                if([transformer isKindOfClass:FJModelValueTransformer.class]) {
+                //                    FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
+                //                    modelTransformer.userInfo = subitemUserInfo;
+                //                    modelTransformer.context = context;
+                //                }
+                for(id subvalue in value) {
+                    id subitem = [[self class] managedObjectFromModel:subvalue context:context userInfo:subitemUserInfo error:error];
+                    [self importModelsWithValue:value property:propertyDescriptor subitems:@[subitem] context:context userInfo:subitemUserInfo error:error];
                 }
                 
-                value = [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
             } else {
                 id subvalue = [self valueForKey:propertyName];
                 if(subvalue) {
-                    [subvalue updateWithValue:value context:context userInfo:subitemUserInfo error:error];
-                    value = nil;
-                } else {
-                    value = [propertyDescriptor.typeClass importValue:value context:context userInfo:subitemUserInfo error:error];
+                    [self setValue:nil forKey:propertyName];
                 }
+                value = [[self class] managedObjectFromModel:value context:context userInfo:subitemUserInfo error:error];
             }
         }
         if(value) {
@@ -220,6 +223,37 @@ NSString *const FJImportRelationshipKey = @"relatedByAttribute";
     }
     return nil;
 }
+
+- (id)importModelsWithValue:(id)value property:(FJPropertyDescriptor *)property subitems:(NSArray *)subitems context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    NSDictionary *relationships = [self.entity relationshipsByName];
+    NSRelationshipDescription *relationshipDescription = relationships[property.name];
+    
+    for(id subitem in subitems) {
+        NSString *addRelationMessageFormat = @"set%@:";
+        id relationshipSource = self;
+        if ([relationshipDescription isToMany]) {
+            addRelationMessageFormat = @"add%@Object:";
+            if ([relationshipDescription respondsToSelector:@selector(isOrdered)] && [relationshipDescription isOrdered]) {
+                NSString *selectorName = [relationshipDescription name];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+                relationshipSource = [self performSelector:NSSelectorFromString(selectorName)];
+#pragma clang diagnostic pop
+                addRelationMessageFormat = @"addObject:";
+            }
+        }
+        
+        NSString *addRelatedObjectToSetMessage = [NSString stringWithFormat:addRelationMessageFormat, [[relationshipDescription name] capitalizedStringWithIndex:0]];
+        SEL selector = NSSelectorFromString(addRelatedObjectToSetMessage);
+        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [relationshipSource performSelector:selector withObject:subitem];
+#pragma clang diagnostic pop
+    }
+    return nil;
+}
+
 
 + (NSManagedObject *)findObjectInContext:(NSManagedObjectContext *)context userInfo:(NSDictionary *)userInfo value:(id)value {
     __block id item = nil;
