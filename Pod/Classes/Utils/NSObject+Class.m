@@ -32,7 +32,7 @@ BOOL FJSimpleClass(Class class) {
     BOOL stop = NO;
     
     Class managedClass = NSClassFromString(@"NSManagedObject");
-    while (!stop && !([cls isEqual:NSObject.class] || [cls isSubclassOfClass:managedClass])) {
+    while (!stop && !([cls isEqual:NSObject.class] || [cls isEqual:managedClass])) {
         unsigned count = 0;
         objc_property_t *properties = class_copyPropertyList(cls, &count);
         
