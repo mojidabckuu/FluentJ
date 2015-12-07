@@ -22,22 +22,29 @@
             break;
         }
     }
-    if([self respondsToSelector:@selector(key)]) {
+    @try {
         value = [self valueForKey:key];
-    } else if([key isCollection] && !simple) {
-        for(id subkey in key) {
-            SEL selector = NSSelectorFromString(subkey);
-//            if([self respondsToSelector:NSSelectorFromString(subkey)]) {
+    }
+    @catch (NSException *exception) {
+//        NSLog(@"Something went wrong: %@", exception);
+        if([self respondsToSelector:@selector(key)]) {
+            value = [self valueForKey:key];
+        } else if([key isCollection] && !simple) {
+            for(id subkey in key) {
+                SEL selector = NSSelectorFromString(subkey);
+                //            if([self respondsToSelector:NSSelectorFromString(subkey)]) {
                 value = [self valueForKey:subkey];
                 if(value) {
                     break;
                 }
-//            }
+                //            }
+            }
+        } else if([self isKindOfClass:[NSDictionary class]]) {
+            value = [self valueForKey:key];
+        } else {
+            value = self;
         }
-    } else if([self isKindOfClass:[NSDictionary class]]) {
-        value = [self valueForKey:key];
-    } else {
-        value = self;
+        
     }
     return value;
 }

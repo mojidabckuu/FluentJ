@@ -141,7 +141,7 @@ Class FJClassFromString(NSString *className) {
     id model = [[FJClassFromString(entity.name) alloc] init];
     
     NSDictionary *managedObjectProperties = entity.propertiesByName;
-    NSSet *properties = [[object class] properties];
+    NSSet *properties = [[model class] properties];
     [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *propertyName = propertyDescriptor.name;
@@ -171,7 +171,7 @@ Class FJClassFromString(NSString *className) {
                 continue;
             }
             if(transformer) {
-                value = [transformer reverseTransformedValue:value];
+                value = [transformer transformedValue:value];
             }
         } else if([attributeDescriptor isKindOfClass:[NSRelationshipDescription class]]) {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([model class])];
@@ -182,15 +182,11 @@ Class FJClassFromString(NSString *className) {
                     [subitems addObject:subitem];
                 }
             } else {
-                id subvalue = [self valueForKey:propertyName];
-                if(subvalue) {
-                    [self setValue:nil forKey:propertyName];
-                }
-                value = [[self class] modelFromManagedObject:subvalue context:context userInfo:subitemUserInfo error:error];
+                value = [[self class] modelFromManagedObject:value context:context userInfo:subitemUserInfo error:error];
             }
         }
         if(value) {
-            [self setValue:value forKey:propertyName];
+            [model setValue:value forKey:propertyName];
         }
     }
     return model;
