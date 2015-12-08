@@ -15,6 +15,7 @@
 @property (nonatomic, strong) id context;
 
 + (instancetype)transformerWithModelClass:(Class)modelClass;
-- (instancetype)initWithModelClass:(Class)modelClass;
++ (instancetype)transformerWithModelClass:(Class)modelClass userInfo:(NSDictionary *)userInfo;
++ (instancetype)transformerWithModelClass:(Class)modelClass userInfo:(NSDictionary *)userInfo context:(id)context;
 
 @end
