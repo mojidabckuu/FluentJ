@@ -120,7 +120,7 @@
                 }
             }
         }
-        if(value) {
+        if(value && !propertyDescriptor.isReadOnly) {
             [self setValue:value forKey:propertyName];
         }
     }
