@@ -239,7 +239,7 @@
             continue;
         }
         id exportedValue = nil;
-        NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:valueToExport];
+        NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
             NSMutableArray *subitems = nil;
             if(transformer) {
