@@ -98,6 +98,11 @@
             continue;
         }
         if(transformer && !isCollection) {
+            if([transformer isKindOfClass:FJModelValueTransformer.class]) {
+                FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
+                modelTransformer.userInfo = userInfo;
+                modelTransformer.context = context;
+            }
             value = [transformer transformedValue:value];
         } else {
             NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
