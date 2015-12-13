@@ -29,8 +29,9 @@
                 transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformer];
             } else if(propertyDescriptor.typeClass == NSString.class) {
                 transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
-            } else if(!FJSimpleClass(propertyDescriptor.typeClass)) {
-                transformer = [FJModelValueTransformer transformerWithModelClass:propertyDescriptor.typeClass];
+            } else if([[propertyDescriptor.name lowercaseString] hasSuffix:@"id"] && !FJSimpleClass(propertyDescriptor.typeClass)) {
+                // TODO: HARD LIFEHACK FROM EXTERNAL LIB CRUDSY.
+                transformer = [NSValueTransformer valueTransformerForName:@"FJModelIdValueTransformer"];
             }
         } else if(propertyDescriptor.type != NULL) {
             if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
