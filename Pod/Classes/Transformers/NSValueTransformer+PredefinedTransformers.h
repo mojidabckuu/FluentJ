@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const FJBoolValueTransformer;
-extern NSString *const FJNumberValueTransformer;
-extern NSString *const FJURLValueTransformer;
-extern NSString *const FJEmptyValueTransformer;
+extern NSString *const FJBoolValueTransformerKey;
+extern NSString *const FJNumberValueTransformerKey;
+extern NSString *const FJURLValueTransformerKey;
+extern NSString *const FJEmptyValueTransformerKey;
+extern NSString *const FJModelValueTransformerKey;
 
 @interface NSValueTransformer (PredefinedTransformers)
 

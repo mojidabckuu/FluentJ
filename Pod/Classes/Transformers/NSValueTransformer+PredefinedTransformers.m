@@ -10,10 +10,13 @@
 
 #import "FJValueTransformer.h"
 
-NSString *const FJBoolValueTransformer = @"FJBoolValueTransformer";
-NSString *const FJNumberValueTransformer = @"FJNumberValueTransformer";
-NSString *const FJURLValueTransformer = @"FJURLValueTransformer";
-NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
+#import "FJModelValueTransformer.h"
+
+NSString *const FJBoolValueTransformerKey = @"FJBoolValueTransformer";
+NSString *const FJNumberValueTransformerKey = @"FJNumberValueTransformer";
+NSString *const FJURLValueTransformerKey = @"FJURLValueTransformer";
+NSString *const FJEmptyValueTransformerKey = @"FJEmptyValueTransformer";
+NSString *const FJModelValueTransformerKey = @"FJModelValueTransformer";
 
 @implementation NSValueTransformer (PredefinedTransformers)
 
@@ -34,7 +37,7 @@ NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
         }
         return nil;
     }];
-    [NSValueTransformer setValueTransformer:booleanValueTransformer forName:FJBoolValueTransformer];
+    [NSValueTransformer setValueTransformer:booleanValueTransformer forName:FJBoolValueTransformerKey];
     
     FJValueTransformer *numberValueTransformer = [FJValueTransformer transformerUsingForwardBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
         if(!value) return nil;
@@ -57,7 +60,7 @@ NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
         *success = NO;
         return nil;
     }];
-    [NSValueTransformer setValueTransformer:numberValueTransformer forName:FJNumberValueTransformer];
+    [NSValueTransformer setValueTransformer:numberValueTransformer forName:FJNumberValueTransformerKey];
     
     
     FJValueTransformer *URLValueTransformer = [FJValueTransformer transformerUsingForwardBlock:^id(NSString *value, BOOL *success, NSError *__autoreleasing *error) {
@@ -81,15 +84,17 @@ NSString *const FJEmptyValueTransformer = @"FJEmptyValueTransformer";
         }
         return value.absoluteString;
     }];
-    [NSValueTransformer setValueTransformer:URLValueTransformer forName:FJURLValueTransformer];
+    [NSValueTransformer setValueTransformer:URLValueTransformer forName:FJURLValueTransformerKey];
     
     FJValueTransformer *emptyValueTransformer = [FJValueTransformer transformerUsingForwardBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
         return value;
     } reverseBlock:^id(id value, BOOL *success, NSError *__autoreleasing *error) {
         return value;
     }];
-    [NSValueTransformer setValueTransformer:emptyValueTransformer forName:FJEmptyValueTransformer];
+    [NSValueTransformer setValueTransformer:emptyValueTransformer forName:FJEmptyValueTransformerKey];
     
+    FJModelValueTransformer *modelValueTranformer = [[FJModelValueTransformer alloc] init];
+    [NSValueTransformer setValueTransformer:modelValueTranformer forName:FJModelValueTransformerKey];
 }
 
 @end

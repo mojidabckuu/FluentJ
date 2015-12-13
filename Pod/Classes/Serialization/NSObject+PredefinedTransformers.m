@@ -24,20 +24,24 @@
     if(!transformer) {
         if(propertyDescriptor.typeClass != nil) {
             if(propertyDescriptor.typeClass == NSNumber.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJNumberValueTransformer];
+                transformer = [NSValueTransformer valueTransformerForName:FJNumberValueTransformerKey];
             } else if(propertyDescriptor.typeClass == NSURL.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformer];
+                transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformerKey];
             } else if(propertyDescriptor.typeClass == NSString.class) {
-                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
-            } else if([[propertyDescriptor.name lowercaseString] hasSuffix:@"id"] && !FJSimpleClass(propertyDescriptor.typeClass)) {
+                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformerKey];
+            } else if(!FJSimpleClass(propertyDescriptor.typeClass)) {
                 // TODO: HARD LIFEHACK FROM EXTERNAL LIB CRUDSY.
-                transformer = [NSValueTransformer valueTransformerForName:@"FJModelIdValueTransformer"];
+                if([[propertyDescriptor.name lowercaseString] hasSuffix:@"id"]) {
+                    transformer = [NSValueTransformer valueTransformerForName:@"FJModelIdValueTransformer"];
+                } else {
+                    transformer = [NSValueTransformer valueTransformerForName:FJModelValueTransformerKey];
+                }
             }
         } else if(propertyDescriptor.type != NULL) {
             if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
-                transformer = [NSValueTransformer valueTransformerForName:FJBoolValueTransformer];
+                transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformerKey];
             } else {
-                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformer];
+                transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformerKey];
             }
         }
     }
