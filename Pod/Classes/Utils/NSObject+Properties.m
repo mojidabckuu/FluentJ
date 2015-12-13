@@ -52,17 +52,15 @@ static void *FJCachedPropertyKeysKey = &FJCachedPropertyKeysKey;
     NSString *identifierString = [[[FluentJConfiguration sharedInstance] identifierKeyPathName] lowercaseString];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *value = propertyDescriptor.name;
-        if(prefix) {
-            if(sneak) {
-                NSRange range = NSMakeRange(0, [propertyDescriptor.name length]);
-                value = [[regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"] lowercaseString];
-                if(!FJSimpleClass(propertyDescriptor.typeClass)) {
-                    value = [NSString stringWithFormat:@"%@_%@", value, identifierString];
-                }
-            } else {
-                if(!FJSimpleClass(propertyDescriptor.typeClass)) {
-                    value = [NSString stringWithFormat:@"%@%@", value, [identifierString capitalizedStringWithIndex:0]];
-                }
+        if(sneak) {
+            NSRange range = NSMakeRange(0, [propertyDescriptor.name length]);
+            value = [[regex stringByReplacingMatchesInString:propertyDescriptor.name options:0 range:range withTemplate:@"$1_$2"] lowercaseString];
+            if(prefix && !FJSimpleClass(propertyDescriptor.typeClass)) {
+                value = [NSString stringWithFormat:@"%@_%@", value, identifierString];
+            }
+        } else {
+            if(prefix && !FJSimpleClass(propertyDescriptor.typeClass)) {
+                value = [NSString stringWithFormat:@"%@%@", value, [identifierString capitalizedStringWithIndex:0]];
             }
         }
         [keys setValue:value forKey:propertyDescriptor.name];
