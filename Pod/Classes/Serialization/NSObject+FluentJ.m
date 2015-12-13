@@ -244,7 +244,7 @@
             continue;
         }
         id exportedValue = nil;
-        NSValueTransformer *transformer = [[valueToExport class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
+        NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
             NSMutableArray *subitems = nil;
             if(transformer) {
@@ -262,7 +262,7 @@
             if(transformer) {
                 exportedValue = [transformer reverseTransformedValue:value];
             } else {
-                NSString *classString = NSStringFromClass([valueToExport class]);
+                NSString *classString = NSStringFromClass(self);
                 NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:classString];
                 exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
             }
