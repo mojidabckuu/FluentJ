@@ -25,6 +25,8 @@
 
 #import "NSObject+KVC.h"
 
+#import "FluentJConfiguration.h"
+
 @implementation NSObject (FluentJ)
 
 #pragma mark - Import
@@ -242,7 +244,8 @@
             continue;
         }
         id value = [valueToExport valueForKey:propertyName];
-        if(!value) {
+        
+        if(!value || ([[FluentJConfiguration sharedInstance] excludeExportNullValues] && [value isKindOfClass:[NSNull class]])) {
             continue;
         }
         id keysArray = keys[propertyName];

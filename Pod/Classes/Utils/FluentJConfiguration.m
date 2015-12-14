@@ -28,6 +28,7 @@
     if(self) {
         self.identifierKeyPathName = @"id";
         self.simpleClasses = [NSMutableArray array];
+        self.excludeExportNullValues = YES;
     }
     return self;
 }

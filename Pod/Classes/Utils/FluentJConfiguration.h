@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSString *identifierKeyPathName;
 @property (nonatomic, strong) NSMutableArray *simpleClasses;
+@property (nonatomic, assign) BOOL excludeExportNullValues;
 
 + (instancetype)sharedInstance;
 
