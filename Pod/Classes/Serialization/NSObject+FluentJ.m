@@ -101,6 +101,7 @@
             if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                 FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                 modelTransformer.userInfo = userInfo;
+                modelTransformer.modelClass = propertyDescriptor.typeClass;
                 modelTransformer.context = context;
             }
             value = [transformer transformedValue:value];
@@ -111,6 +112,7 @@
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                     FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                     modelTransformer.userInfo = subitemUserInfo;
+                    modelTransformer.modelClass = propertyDescriptor.typeClass;
                     modelTransformer.context = context;
                 }
                 
@@ -243,6 +245,9 @@
         if(!value) {
             continue;
         }
+        id keysArray = keys[propertyName];
+        NSString *key = [keysArray isKindOfClass:[NSArray class]] ? [keysArray firstObject] : keysArray;
+        propertyDescriptor.bindingKey = key;
         id exportedValue = nil;
         NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
@@ -267,8 +272,7 @@
                 exportedValue = [value exportWithUserInfo:subitemUserInfo error:error];
             }
         }
-        id keysArray = keys[propertyName];
-        NSString *key = [keysArray isKindOfClass:[NSArray class]] ? [keysArray firstObject] : keysArray;
+        
         if(exportedValue) {
             [json setObject:exportedValue forKey:key];
         }

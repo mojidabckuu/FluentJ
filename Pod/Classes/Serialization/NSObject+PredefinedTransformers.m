@@ -31,7 +31,7 @@
                 transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformerKey];
             } else if(!FJSimpleClass(propertyDescriptor.typeClass)) {
                 // TODO: HARD LIFEHACK FROM EXTERNAL LIB CRUDSY.
-                if([[propertyDescriptor.name lowercaseString] hasSuffix:@"id"]) {
+                if([[propertyDescriptor.bindingKey lowercaseString] hasSuffix:@"id"]) {
                     transformer = [NSValueTransformer valueTransformerForName:@"FJModelIdValueTransformer"];
                 } else {
                     transformer = [NSValueTransformer valueTransformerForName:FJModelValueTransformerKey];

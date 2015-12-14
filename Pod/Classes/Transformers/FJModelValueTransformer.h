@@ -10,7 +10,7 @@
 
 @interface FJModelValueTransformer : NSValueTransformer
 
-@property (nonatomic, assign, readonly) Class modelClass;
+@property (nonatomic, assign) Class modelClass;
 @property (nonatomic, strong) NSDictionary *userInfo;
 @property (nonatomic, strong) id context;
 

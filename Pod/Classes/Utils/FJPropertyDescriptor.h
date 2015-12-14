@@ -30,6 +30,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) Class typeClass;
 @property (nonatomic, assign) char *type;
+@property (nonatomic, strong) NSString *bindingKey;
 
 //@property (nonatomic, readonly, getter = isFromFoundation) BOOL fromFoundation;
 //
