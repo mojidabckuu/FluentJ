@@ -27,6 +27,8 @@
 
 #import "FluentJConfiguration.h"
 
+NSString *const APIObjectKey = @"APIObjectKey";
+
 @implementation NSObject (FluentJ)
 
 #pragma mark - Import
@@ -94,7 +96,9 @@
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
+        NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+        [fullUserInfo setObject:values forKey:APIObjectKey];
+        NSValueTransformer *transformer = [[self class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:fullUserInfo];
         if([value isKindOfClass:propertyDescriptor.typeClass] && !transformer) {
             [self setValue:value forKey:propertyName];
             continue;
@@ -103,12 +107,14 @@
             if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                 FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                 modelTransformer.userInfo = userInfo;
-                modelTransformer.modelClass = propertyDescriptor.typeClass;
+                if(propertyDescriptor.typeClass) {
+                    modelTransformer.modelClass = propertyDescriptor.typeClass;
+                }
                 modelTransformer.context = context;
             }
             value = [transformer transformedValue:value];
         } else {
-            NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+            NSDictionary *subitemUserInfo = [fullUserInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
             if(isCollection) {
                 NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
@@ -116,7 +122,6 @@
                     modelTransformer.userInfo = subitemUserInfo;
                     modelTransformer.context = context;
                 }
-                
                 value = [self importModelsWithValue:value property:propertyDescriptor transformer:transformer context:context userInfo:subitemUserInfo error:error];
             } else {
                 id subvalue = [self valueForKey:propertyName];

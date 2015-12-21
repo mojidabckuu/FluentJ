@@ -11,6 +11,8 @@
 #import "JSONSerializationProtocol.h"
 #import "JSONSerializationLifecycleProtocol.h"
 
+extern NSString *const APIObjectKey;
+
 @interface NSObject (FluentJ) <JSONSerializationProtocol, JSONSerializationLifecycleProtocol>
 
 @end
