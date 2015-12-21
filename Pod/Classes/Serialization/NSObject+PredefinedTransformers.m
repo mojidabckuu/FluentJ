@@ -23,11 +23,11 @@
     NSValueTransformer *transformer = transformers[propertyDescriptor.name];
     if(!transformer) {
         if(propertyDescriptor.typeClass != nil) {
-            if(propertyDescriptor.typeClass == NSNumber.class) {
+            if([propertyDescriptor.typeClass isKindOfClass:NSNumber.class] || propertyDescriptor.typeClass == NSNumber.class) {
                 transformer = [NSValueTransformer valueTransformerForName:FJNumberValueTransformerKey];
             } else if(propertyDescriptor.typeClass == NSURL.class) {
                 transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformerKey];
-            } else if(propertyDescriptor.typeClass == NSString.class) {
+            } else if([propertyDescriptor.typeClass isKindOfClass:NSString.class] || propertyDescriptor.typeClass == NSString.class) {
                 transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformerKey];
             } else if(!FJSimpleClass(propertyDescriptor.typeClass)) {
                 // TODO: HARD LIFEHACK FROM EXTERNAL LIB CRUDSY.
@@ -39,7 +39,7 @@
             }
         } else if(propertyDescriptor.type != NULL) {
             if(strcmp(propertyDescriptor.type, @encode(BOOL)) == 0) {
-                transformer = [NSValueTransformer valueTransformerForName:FJURLValueTransformerKey];
+                transformer = [NSValueTransformer valueTransformerForName:FJNumberValueTransformerKey];
             } else {
                 transformer = [NSValueTransformer valueTransformerForName:FJEmptyValueTransformerKey];
             }
