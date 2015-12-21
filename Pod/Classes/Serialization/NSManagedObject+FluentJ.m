@@ -134,11 +134,15 @@ Class FJClassFromString(NSString *className) {
         //        }
     }];
     //    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
-    [item updateWithModel:model context:context userInfo:userInfo error:error];
+    [item updateWithModel:model context:context userInfo:fullUserInfo error:error];
     return item;
 }
 
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
+    NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
+    [fullUserInfo addEntriesFromDictionary:userInfo];
+    fullUserInfo[FJDirectMappingKey] = @YES;
+    
     NSEntityDescription *entity = object.entity;
     id model = [[FJClassFromString(entity.name) alloc] init];
     
@@ -156,7 +160,7 @@ Class FJClassFromString(NSString *className) {
         }
         id attributeDescriptor = managedObjectProperties[propertyName];
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
-        NSValueTransformer *transformer = [[model class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
+        NSValueTransformer *transformer = [[model class] transformerWithPropertyDescriptor:propertyDescriptor userInfo:fullUserInfo];
         NSDictionary *bindings = @{@(NSInteger16AttributeType) : NSNumber.class,
                                    @(NSInteger32AttributeType) : NSNumber.class,
                                    @(NSInteger64AttributeType) : NSNumber.class,
@@ -176,7 +180,7 @@ Class FJClassFromString(NSString *className) {
                 value = [transformer transformedValue:value];
             }
         } else if([attributeDescriptor isKindOfClass:[NSRelationshipDescription class]]) {
-            NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([model class])];
+            NSDictionary *subitemUserInfo = [fullUserInfo dictionaryWithKeyPrefix:NSStringFromClass([model class])];
             if(isCollection) {
                 NSMutableArray *subitems = [NSMutableArray array];
                 for(id subvalue in value) {
