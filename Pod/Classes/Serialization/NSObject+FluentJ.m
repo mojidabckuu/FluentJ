@@ -114,7 +114,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
             }
             value = [transformer transformedValue:value];
         } else {
-            NSDictionary *subitemUserInfo = [fullUserInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+            NSDictionary *subitemUserInfo = fullUserInfo;
             if(isCollection) {
                 NSAssert(transformer, ([NSString stringWithFormat:@"You should provide transformer for property: %@", propertyDescriptor.name]));
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
