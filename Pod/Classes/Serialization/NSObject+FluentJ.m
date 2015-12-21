@@ -114,7 +114,6 @@
                 if([transformer isKindOfClass:FJModelValueTransformer.class]) {
                     FJModelValueTransformer *modelTransformer = (FJModelValueTransformer *)transformer;
                     modelTransformer.userInfo = subitemUserInfo;
-                    modelTransformer.modelClass = propertyDescriptor.typeClass;
                     modelTransformer.context = context;
                 }
                 
