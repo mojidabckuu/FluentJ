@@ -283,6 +283,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
         if(exportedValue) {
             [json setObject:exportedValue forKey:key];
         }
+        propertyDescriptor.bindingKey = nil;
     }
     return json;
 }
