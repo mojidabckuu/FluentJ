@@ -138,6 +138,34 @@ Class FJClassFromString(NSString *className) {
     return item;
 }
 
++ (nullable id)findBy:(NSString *)by value:(id)value model:(id)model context:(NSManagedObjectContext *)context {
+    __block id item = nil;
+    [context performBlockAndWait:^{
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
+        id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
+        NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
+        
+        id relatedByValue = value;
+        
+        if (primaryAttribute) {
+            NSFetchRequest *request = [[NSFetchRequest alloc] init];
+            [request setEntity:entityDescription];
+            [request setPredicate:[NSPredicate predicateWithFormat:@"%K = %@", relatedBy, relatedByValue]];
+            [request setFetchLimit:1];
+            __block NSArray *results = nil;
+            [context performBlockAndWait:^{
+                NSError *error = nil;
+                results = [context executeFetchRequest:request error:&error];
+                if(error) {
+                    NSLog(@"ERROR: %@", error);
+                }
+            }];
+            item = results.count ? [results firstObject] : nil;
+        }
+    }];
+    return item;
+}
+
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];

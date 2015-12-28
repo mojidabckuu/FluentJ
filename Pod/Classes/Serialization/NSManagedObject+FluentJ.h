@@ -20,4 +20,6 @@ extern NSString *const FJDirectMappingKey;
 
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
++ (nullable id)findBy:(NSString *)by value:(id)value context:(NSManagedObjectContext *)context;
+
 @end
