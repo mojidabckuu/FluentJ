@@ -10,7 +10,7 @@
 
 #import "NSObject+FluentJ.h"
 
-extern NSString *const FJDirectMappingKey;
+extern NSString *_Nonnull const FJDirectMappingKey;
 
 @interface NSManagedObject (FluentJ)
 
@@ -20,6 +20,6 @@ extern NSString *const FJDirectMappingKey;
 
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
-+ (nullable id)findBy:(NSString *)by value:(id)value context:(NSManagedObjectContext *)context;
++ (nullable id)findBy:(nonnull NSString *)by value:(nonnull id)value model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context;
 
 @end
