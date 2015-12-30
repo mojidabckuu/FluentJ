@@ -379,4 +379,59 @@ Class FJClassFromString(NSString *className) {
     return item;
 }
 
+#pragma mark - Finders
+
++ (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context {
+    NSFetchRequest *request = [self requestFirstByAttribute:by withValue:value inContext:context entityName:entity];
+    return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
+}
+
++ (NSArray *)findAllBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context {
+    NSFetchRequest *request = [self requestAllWhere:by isEqualTo:value inContext:context entityName:entity];
+    return [self executeFetchRequest:request inContext:context];
+}
+
+#pragma mark - Utils
+
++ (NSFetchRequest *)requestFirstByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName {
+    NSFetchRequest *request = [self requestAllWhere:attribute isEqualTo:searchValue inContext:context entityName:entityName];
+    [request setFetchLimit:1];
+    return request;
+}
+
++ (NSFetchRequest *)requestAllWhere:(NSString *)property isEqualTo:(id)value inContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName {
+    NSFetchRequest *request = [self createFetchRequestInContext:context entityName:entityName];
+    [request setPredicate:[NSPredicate predicateWithFormat:@"%K = %@", property, value]];
+    return request;
+}
+
+
++ (NSFetchRequest *)createFetchRequestInContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName {
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:entityName inManagedObjectContext:context];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    return request;
+}
+
++ (id)executeFetchRequestAndReturnFirstObject:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context {
+    [request setFetchLimit:1];
+    NSArray *results = [self executeFetchRequest:request inContext:context];
+    if ([results count] == 0) {
+        return nil;
+    }
+    return [results firstObject];
+}
+
++ (NSArray *)executeFetchRequest:(NSFetchRequest *)request inContext:(NSManagedObjectContext *)context {
+    __block NSArray *results = nil;
+    [context performBlockAndWait:^{
+        NSError *error = nil;
+        results = [context executeFetchRequest:request error:&error];
+        if (results == nil) {
+            NSLog(@"%@", error);
+        }
+    }];
+    return results;
+}
+
 @end
