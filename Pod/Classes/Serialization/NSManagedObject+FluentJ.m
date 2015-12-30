@@ -96,7 +96,7 @@ Class FJClassFromString(NSString *className) {
 
 #pragma mark - ManagedObject transform
 
-+ (nullable NSManagedObject *)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
++ (nullable instancetype)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
     fullUserInfo[FJDirectMappingKey] = @YES;
