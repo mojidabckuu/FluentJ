@@ -200,7 +200,12 @@ Class FJClassFromString(NSString *className) {
                     [subitems addObject:subitem];
                 }
             } else {
-                value = [[self class] modelFromManagedObject:value context:context userInfo:subitemUserInfo error:error];
+                NSRelationshipDescription *relationshipDescriptor = (NSRelationshipDescription *)attributeDescriptor;
+                if(relationshipDescriptor == relationshipDescriptor.inverseRelationship.inverseRelationship) {
+                    value = nil;
+                } else {
+                    value = [[self class] modelFromManagedObject:value context:context userInfo:subitemUserInfo error:error];
+                }
             }
         }
         if(value) {
@@ -364,7 +369,7 @@ Class FJClassFromString(NSString *className) {
     __block id item = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
-        id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
+        id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey] ?: by;
         NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
         
         NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:[self properties]];
