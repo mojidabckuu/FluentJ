@@ -207,6 +207,17 @@ Class FJClassFromString(NSString *className) {
     return model;
 }
 
++ (nullable NSArray *)modelsFromManagedObjects:(nonnull NSArray *)objects context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
+    NSMutableArray *models = [NSMutableArray array];
+    for(NSManagedObject *object in objects) {
+        id model = [self modelFromManagedObject:object context:context userInfo:userInfo error:error];
+        if(!error && model) {
+            [models addObject:model];
+        }
+    }
+    return models;
+}
+
 - (void)updateWithModel:(nonnull id)model context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing  _Nullable *)error {
     NSEntityDescription *entity = self.entity;
     NSDictionary *managedObjectProperties = entity.propertiesByName;
