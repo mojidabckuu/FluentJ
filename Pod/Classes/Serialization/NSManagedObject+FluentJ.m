@@ -97,6 +97,10 @@ Class FJClassFromString(NSString *className) {
 #pragma mark - ManagedObject transform
 
 + (nullable instancetype)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
+    return [self managedObjectFromModel:model context:context userInfo:userInfo error:error persist:NO];
+}
+
++ (nullable instancetype)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error persist:(BOOL)persist {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
     fullUserInfo[FJDirectMappingKey] = @YES;
@@ -136,6 +140,9 @@ Class FJClassFromString(NSString *className) {
     //    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
     if(item.isInserted) {
         [item updateWithModel:model context:context userInfo:fullUserInfo error:error];
+    }
+    if(item.isUpdated && persist) {
+        [item.managedObjectContext save:error];
     }
     return item;
 }
