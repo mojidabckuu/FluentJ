@@ -96,7 +96,7 @@ Class FJClassFromString(NSString *className) {
 
 #pragma mark - ManagedObject transform
 
-+ (nullable id)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
++ (nullable NSManagedObject *)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
     fullUserInfo[FJDirectMappingKey] = @YES;
@@ -331,11 +331,11 @@ Class FJClassFromString(NSString *className) {
 
 #pragma mark - Finders
 
-+ (nullable id)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(NSDictionary *)userInfo {
++ (nullable NSManagedObject *)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo {
     return [self findBy:by model:model context:context userInfo:userInfo shouldCreate:NO];
 }
 
-+ (nonnull id)findOrCreateBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo {
++ (nonnull NSManagedObject *)findOrCreateBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo {
     return [self findBy:by model:model context:context userInfo:userInfo shouldCreate:YES];
 }
 
