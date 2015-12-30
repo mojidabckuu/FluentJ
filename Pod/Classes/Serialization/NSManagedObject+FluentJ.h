@@ -11,6 +11,7 @@
 #import "NSObject+FluentJ.h"
 
 extern NSString *_Nonnull const FJDirectMappingKey;
+extern NSString *_Nonnull const FJModelKey;
 
 @interface NSManagedObject (FluentJ)
 

@@ -30,6 +30,7 @@
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 NSString *const FJDirectMappingKey = @"directMapping";
+NSString *const FJModelKey = @"FJModelKey";
 
 Class FJClassFromString(NSString *className) {
     Class cls = NSClassFromString(className);
@@ -103,6 +104,7 @@ Class FJClassFromString(NSString *className) {
 + (nullable instancetype)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error persist:(BOOL)persist {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
+    fullUserInfo[FJModelKey] = model;
     fullUserInfo[FJDirectMappingKey] = @YES;
     __block NSManagedObject *item = nil;
     //    __block id resultValue = nil;
@@ -150,6 +152,7 @@ Class FJClassFromString(NSString *className) {
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
+    fullUserInfo[FJModelKey] = object;
     fullUserInfo[FJDirectMappingKey] = @YES;
     
     NSEntityDescription *entity = object.entity;
