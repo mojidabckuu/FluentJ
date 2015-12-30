@@ -100,7 +100,7 @@ Class FJClassFromString(NSString *className) {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
     fullUserInfo[FJDirectMappingKey] = @YES;
-    __block id item = nil;
+    __block NSManagedObject *item = nil;
     //    __block id resultValue = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
@@ -134,18 +134,20 @@ Class FJClassFromString(NSString *className) {
         //        }
     }];
     //    NSManagedObject *object = [[self class] findObjectInContext:context userInfo:fullUserInfo value:model];
-    [item updateWithModel:model context:context userInfo:fullUserInfo error:error];
+    if(item.isInserted) {
+        [item updateWithModel:model context:context userInfo:fullUserInfo error:error];
+    }
     return item;
 }
 
-+ (nullable id)findBy:(NSString *)by value:(id)value model:(id)model context:(NSManagedObjectContext *)context {
++ (nullable id)findBy:(nonnull NSString *)by value:(nonnull id)value model:(id)model context:(nonnull NSManagedObjectContext *)context {
     __block id item = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
         NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
         
-        id relatedByValue = value;
+        id relatedByValue = relatedBy && [model respondsToSelector:NSSelectorFromString(relatedBy)] ? [model valueForKey:relatedBy] : value;
         
         if (primaryAttribute) {
             NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -274,6 +276,7 @@ Class FJClassFromString(NSString *className) {
                     id subitem = [[self class] managedObjectFromModel:subvalue context:context userInfo:subitemUserInfo error:error];
                     [self importModelsWithValue:value property:propertyDescriptor subitems:@[subitem] context:context userInfo:subitemUserInfo error:error];
                 }
+                value = nil;
                 
             } else {
                 id subvalue = [self valueForKey:propertyName];
@@ -354,10 +357,16 @@ Class FJClassFromString(NSString *className) {
     return nil;
 }
 
++ (nullable id)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(NSDictionary *)userInfo {
+    return [self findBy:by model:model context:context userInfo:userInfo shouldCreate:NO];
+}
 
-+ (NSManagedObject *)findObjectInContext:(NSManagedObjectContext *)context userInfo:(NSDictionary *)userInfo value:(id)value {
++ (nonnull id)findOrCreateBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo {
+    return [self findBy:by model:model context:context userInfo:userInfo shouldCreate:YES];
+}
+
++ (nullable id)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo shouldCreate:(BOOL)shouldCreate {
     __block id item = nil;
-    __block id resultValue = nil;
     [context performBlockAndWait:^{
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey];
@@ -365,7 +374,7 @@ Class FJClassFromString(NSString *className) {
         
         NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:[self properties]];
         
-        id relatedByValue = [value valueForVariableKey:keys[relatedBy]];
+        id relatedByValue = [model valueForVariableKey:keys[relatedBy]];
         
         if (primaryAttribute) {
             NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -382,12 +391,8 @@ Class FJClassFromString(NSString *className) {
             }];
             item = results.count ? [results firstObject] : nil;
         }
-        if (!item) {
+        if (!item && shouldCreate) {
             item = [[self alloc] initWithEntity:entityDescription insertIntoManagedObjectContext:context];
-        }
-        resultValue = value;
-        if(![value isKindOfClass:[NSDictionary class]]) {
-            resultValue = @{relatedBy : value};
         }
     }];
     return item;
