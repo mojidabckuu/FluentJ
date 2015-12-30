@@ -402,6 +402,32 @@ Class FJClassFromString(NSString *className) {
     return [self executeFetchRequest:request inContext:context];
 }
 
+#pragma mark - Delete
+
++ (BOOL)deleteBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted {
+    NSManagedObject *object = [self findBy:by value:value entity:entity context:context];
+    if(object) {
+        [object.managedObjectContext deleteObject:object];
+        if(persisted) {
+            return [object.managedObjectContext save:error];
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
++ (BOOL)deleteAllBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted {
+    NSArray *objects = [self findAllBy:by value:value entity:entity context:context];
+    for(NSManagedObject *object in objects) {
+        [object.managedObjectContext deleteObject:object];
+    }
+    if(persisted) {
+        return [context save:error];
+    }
+    return TRUE;
+}
+
+
 #pragma mark - Utils
 
 + (NSFetchRequest *)requestFirstByAttribute:(NSString *)attribute withValue:(id)searchValue inContext:(NSManagedObjectContext *)context entityName:(NSString *)entityName {

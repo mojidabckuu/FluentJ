@@ -29,7 +29,13 @@ extern NSString *_Nonnull const FJDirectMappingKey;
 
 #pragma mark - Finders
 
-+ (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context;
-+ (NSArray *)findAllBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context;
++ (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
++ (nonnull NSArray *)findAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
+
+#pragma mark - Delete
+
++ (BOOL)deleteBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted;
++ (BOOL)deleteAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted;
+
 
 @end
