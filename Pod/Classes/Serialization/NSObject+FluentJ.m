@@ -234,6 +234,8 @@ NSString *const APIObjectKey = @"APIObjectKey";
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     NSSet *properties = [exportClass properties];
     NSDictionary *keys = nil;
+    NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    fullUserInfo[APIObjectKey] = valueToExport;
     if([[self class] respondsToSelector:@selector(keysForKeyPaths:)]) {
         keys = [exportClass keysForKeyPaths:userInfo];
     }
@@ -256,7 +258,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
         NSString *key = [keysArray isKindOfClass:[NSArray class]] ? [keysArray firstObject] : keysArray;
         propertyDescriptor.bindingKey = key;
         id exportedValue = nil;
-        NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor userInfo:userInfo];
+        NSValueTransformer *transformer = [self transformerWithPropertyDescriptor:propertyDescriptor userInfo:fullUserInfo];
         if([value conformsToProtocol:@protocol(NSFastEnumeration)]) {
             NSMutableArray *subitems = nil;
             if(transformer) {
@@ -264,7 +266,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
             } else {
                 subitems = [NSMutableArray array];
                 for(id item in value) {
-                    NSDictionary *subitemUserInfo = [userInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
+                    NSDictionary *subitemUserInfo = [fullUserInfo dictionaryWithKeyPrefix:NSStringFromClass([self class])];
                     id subItemjson = [item exportWithUserInfo:subitemUserInfo error:error];
                     [subitems addObject:subItemjson];
                 }

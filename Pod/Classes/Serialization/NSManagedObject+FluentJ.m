@@ -30,7 +30,6 @@
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 NSString *const FJDirectMappingKey = @"directMapping";
-NSString *const FJModelKey = @"FJModelKey";
 
 Class FJClassFromString(NSString *className) {
     Class cls = NSClassFromString(className);
@@ -104,7 +103,7 @@ Class FJClassFromString(NSString *className) {
 + (nullable instancetype)managedObjectFromModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error persist:(BOOL)persist {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
-    fullUserInfo[FJModelKey] = model;
+    fullUserInfo[APIObjectKey] = model;
     fullUserInfo[FJDirectMappingKey] = @YES;
     __block NSManagedObject *item = nil;
     //    __block id resultValue = nil;
@@ -143,7 +142,7 @@ Class FJClassFromString(NSString *className) {
     if(item.isInserted) {
         [item updateWithModel:model context:context userInfo:fullUserInfo error:error];
     }
-    if(item.isUpdated && persist) {
+    if((item.isUpdated || item.isInserted) && persist) {
         [item.managedObjectContext save:error];
     }
     return item;
@@ -152,7 +151,7 @@ Class FJClassFromString(NSString *className) {
 + (nullable id)modelFromManagedObject:(nonnull NSManagedObject *)object context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error {
     NSMutableDictionary *fullUserInfo = [NSMutableDictionary dictionary];
     [fullUserInfo addEntriesFromDictionary:userInfo];
-    fullUserInfo[FJModelKey] = object;
+    fullUserInfo[APIObjectKey] = object;
     fullUserInfo[FJDirectMappingKey] = @YES;
     
     NSEntityDescription *entity = object.entity;
@@ -219,7 +218,7 @@ Class FJClassFromString(NSString *className) {
     NSMutableArray *models = [NSMutableArray array];
     for(NSManagedObject *object in objects) {
         id model = [self modelFromManagedObject:object context:context userInfo:userInfo error:error];
-        if(!error && model) {
+        if(!*error && model) {
             [models addObject:model];
         }
     }
@@ -368,11 +367,11 @@ Class FJClassFromString(NSString *className) {
 + (nullable id)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo shouldCreate:(BOOL)shouldCreate {
     __block id item = nil;
     [context performBlockAndWait:^{
-        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:NSStringFromClass(self) inManagedObjectContext:context];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[model classIdentifier] inManagedObjectContext:context];
         id relatedBy = [entityDescription.userInfo valueForKey:FJImportRelationshipKey] ?: by;
         NSAttributeDescription *primaryAttribute = [entityDescription attributesByName][relatedBy];
         
-        NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:[self properties]];
+        NSDictionary *keys = [[self class] keysForKeyPaths:userInfo] ?: [[self class] keysWithProperties:[[model class] properties]];
         
         id relatedByValue = [model valueForVariableKey:keys[relatedBy]];
         
@@ -415,9 +414,10 @@ Class FJClassFromString(NSString *className) {
 + (BOOL)deleteBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted {
     NSManagedObject *object = [self findBy:by value:value entity:entity context:context];
     if(object) {
-        [object.managedObjectContext deleteObject:object];
-        if(persisted) {
-            return [object.managedObjectContext save:error];
+        [context deleteObject:object];
+        if(persisted && [context hasChanges]) {
+            BOOL result = [context save:error];
+            return result;
         }
         return TRUE;
     }
