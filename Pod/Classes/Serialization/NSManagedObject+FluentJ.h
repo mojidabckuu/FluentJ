@@ -22,6 +22,5 @@ extern NSString *_Nonnull const FJDirectMappingKey;
 
 + (nullable NSManagedObject *)findBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo;
 + (nonnull NSManagedObject *)findOrCreateBy:(nonnull NSString *)by model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context userInfo:(nonnull NSDictionary *)userInfo;
-+ (nullable id)findBy:(nonnull NSString *)by value:(nonnull id)value model:(nonnull id)model context:(nonnull NSManagedObjectContext *)context;
 
 @end
