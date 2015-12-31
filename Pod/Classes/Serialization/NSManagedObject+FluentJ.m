@@ -198,6 +198,7 @@ Class FJClassFromString(NSString *className) {
                     id subitem = [[self class] modelFromManagedObject:subvalue context:context userInfo:subitemUserInfo error:error];
                     [subitems addObject:subitem];
                 }
+                value = subitems;
             } else {
                 NSRelationshipDescription *relationshipDescriptor = (NSRelationshipDescription *)attributeDescriptor;
                 if(relationshipDescriptor == relationshipDescriptor.inverseRelationship.inverseRelationship) {
