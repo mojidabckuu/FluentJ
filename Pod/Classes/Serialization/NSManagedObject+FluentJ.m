@@ -400,6 +400,11 @@ Class FJClassFromString(NSString *className) {
 
 #pragma mark - Finders
 
++ (nullable NSManagedObject *)findEntity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error {
+    NSFetchRequest *request = [self createFetchRequestInContext:context entityName:entity];
+    return [self executeFetchRequestAndReturnFirstObject:request inContext:context];
+}
+
 + (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(id)value entity:(NSString *)entity context:(nonnull NSManagedObjectContext *)context {
     NSFetchRequest *request = [self requestFirstByAttribute:by withValue:value inContext:context entityName:entity];
     return [self executeFetchRequestAndReturnFirstObject:request inContext:context];

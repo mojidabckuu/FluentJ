@@ -29,6 +29,8 @@ extern NSString *_Nonnull const FJDirectMappingKey;
 
 #pragma mark - Finders
 
++ (nullable NSManagedObject *)findEntity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error;
+
 + (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
 + (nonnull NSArray *)findAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
 
