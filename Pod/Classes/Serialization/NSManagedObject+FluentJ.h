@@ -25,7 +25,7 @@ extern NSString *_Nonnull const FJDirectMappingKey;
 
 #pragma mark - Update
 
-- (void)updateWithModel:(nonnull id)model context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError *__autoreleasing  _Nullable *)error;
+- (void)updateWithModel:(nonnull id)model context:(nonnull id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 #pragma mark - Model finders
 
@@ -34,15 +34,15 @@ extern NSString *_Nonnull const FJDirectMappingKey;
 
 #pragma mark - Finders
 
-+ (nullable NSManagedObject *)findEntity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error;
++ (nullable NSManagedObject *)findEntity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 + (nullable NSManagedObject *)findBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
 + (nonnull NSArray *)findAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context;
 
 #pragma mark - Delete
 
-+ (BOOL)deleteBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted;
-+ (BOOL)deleteAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__autoreleasing  _Nullable * )error persisted:(BOOL)persisted;
++ (BOOL)deleteBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__nullable __autoreleasing *__nullable)error persisted:(BOOL)persisted;
++ (BOOL)deleteAllBy:(nonnull NSString *)by value:(nullable id)value entity:(nonnull NSString *)entity context:(nonnull NSManagedObjectContext *)context error:(NSError *__nullable __autoreleasing *__nullable)error persisted:(BOOL)persisted;
 
 
 @end
