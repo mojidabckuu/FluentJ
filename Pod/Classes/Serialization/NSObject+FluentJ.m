@@ -92,7 +92,11 @@ NSString *const APIObjectKey = @"APIObjectKey";
             continue;
         }
         id value = [values valueForVariableKey:keys[propertyName]];
-        if(!value || [value isKindOfClass:[NSNull class]]) {
+        if(!value) {
+            continue;
+        }
+        if([value isKindOfClass:[NSNull class]] && !propertyDescriptor.isReadOnly) {
+            [self setValue:nil forKey:propertyName];
             continue;
         }
         BOOL isCollection = [propertyDescriptor.typeClass conformsToProtocol:@protocol(NSFastEnumeration)];
