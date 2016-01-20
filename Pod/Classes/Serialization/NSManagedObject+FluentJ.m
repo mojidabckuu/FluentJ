@@ -159,7 +159,7 @@ Class FJClassFromString(NSString *className) {
     
     NSDictionary *managedObjectProperties = entity.propertiesByName;
     NSSet *properties = [[model class] properties];
-    [self willImportWithUserInfo:userInfo];
+    [model willImportWithUserInfo:fullUserInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *propertyName = propertyDescriptor.name;
         if(!managedObjectProperties[propertyName]) {
@@ -212,6 +212,7 @@ Class FJClassFromString(NSString *className) {
             [model setValue:value forKey:propertyName];
         }
     }
+    [model didImportWithUserInfo:fullUserInfo];
     return model;
 }
 
@@ -238,6 +239,7 @@ Class FJClassFromString(NSString *className) {
         }
         id value = [model valueForVariableKey:propertyName];
         if(!value || [value isKindOfClass:[NSNull class]]) {
+            [self setValue:nil forKey:propertyName];
             continue;
         }
         id attributeDescriptor = managedObjectProperties[propertyName];
