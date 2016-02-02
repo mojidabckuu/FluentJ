@@ -200,8 +200,9 @@ Class FJClassFromString(NSString *className) {
                 }
                 value = subitems;
             } else {
+                //TODO: Remove this lifehack
                 NSRelationshipDescription *relationshipDescriptor = (NSRelationshipDescription *)attributeDescriptor;
-                if(relationshipDescriptor == relationshipDescriptor.inverseRelationship.inverseRelationship) {
+                if(![relationshipDescriptor.userInfo[@"forceParse"] boolValue] && relationshipDescriptor == relationshipDescriptor.inverseRelationship.inverseRelationship) {
                     value = nil;
                 } else {
                     value = [[self class] modelFromManagedObject:value context:context userInfo:subitemUserInfo error:error];
