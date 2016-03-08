@@ -20,6 +20,7 @@
 // Swift supports nested classes. Their names are encoded.
 // When FluentJ transforms object -> model or model -> object it will try to lookup
 // for name from managedBindings.
+// Format: [entity.name : className]
 
 @property (nonatomic, strong) NSMutableDictionary *managedBndings;
 

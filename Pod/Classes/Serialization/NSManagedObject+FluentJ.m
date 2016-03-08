@@ -27,6 +27,8 @@
 
 #import "NSObject+ClassIdentifier.h"
 
+#import "FluentJConfiguration.h"
+
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
 NSString *const FJDirectMappingKey = @"directMapping";
@@ -155,7 +157,8 @@ Class FJClassFromString(NSString *className) {
     fullUserInfo[FJDirectMappingKey] = @YES;
     
     NSEntityDescription *entity = object.entity;
-    id model = [[FJClassFromString(entity.name) alloc] init];
+    NSString *className = [[FluentJConfiguration sharedInstance] managedBndings][entity.name];
+    id model = [[FJClassFromString(className ?: entity.name) alloc] init];
     
     NSDictionary *managedObjectProperties = entity.propertiesByName;
     NSSet *properties = [[model class] properties];
