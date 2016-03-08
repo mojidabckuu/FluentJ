@@ -22,7 +22,7 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
 		B5E4EAD5056898656E27CC8A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210F564983F5E61CDA3C7FA8 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		D2F7113965E4D8504499C372 /* Pods_FluentJ_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49B4CA3713852515D321076 /* Pods_FluentJ_Example.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		D2F7113965E4D8504499C372 /* Pods_FluentJ_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B49B4CA3713852515D321076 /* Pods_FluentJ_Example.framework */; };
 		F53A96521BA1619D008AD145 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = F53A964D1BA1619D008AD145 /* Item.m */; };
 		F53A96531BA1619D008AD145 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = F53A964F1BA1619D008AD145 /* User.m */; };
 		F53A96541BA1619D008AD145 /* UserCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = F53A96511BA1619D008AD145 /* UserCategory.m */; };
@@ -31,7 +31,7 @@
 		F59104931BA04AF2009919D7 /* VGItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104921BA04AF2009919D7 /* VGItem.m */; };
 		F59104961BA04AF3009919D7 /* VGCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104951BA04AF3009919D7 /* VGCategory.m */; };
 		F59104991BA04AF3009919D7 /* VGUser.m in Sources */ = {isa = PBXBuildFile; fileRef = F59104981BA04AF3009919D7 /* VGUser.m */; };
-		F90B086DA8C3754E96568A01 /* Pods_FluentJ_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC6D4DB79D2A45245C41C7E3 /* Pods_FluentJ_Tests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F90B086DA8C3754E96568A01 /* Pods_FluentJ_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC6D4DB79D2A45245C41C7E3 /* Pods_FluentJ_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

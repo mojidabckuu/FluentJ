@@ -25,7 +25,7 @@
 
 #import "NSString+Capitalize.h"
 
-#import "NSobject+ClassIdentifier.h"
+#import "NSObject+ClassIdentifier.h"
 
 NSString *const FJImportRelationshipKey = @"relatedByAttribute";
 
