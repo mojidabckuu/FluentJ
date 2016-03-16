@@ -28,20 +28,22 @@
 #pragma mark - Lifecycle
 
 + (instancetype)transformerUsingForwardBlock:(FJValueTransformBlock)forwardBlock userInfo:(NSDictionary *)userInfo {
+    NSParameterAssert(forwardBlock != nil);
     return [[FJReversibleValueTransformer alloc] initWithForwardBlock:forwardBlock reverseBlock:nil userInfo:userInfo];
 }
 
 + (instancetype)transformerUsingReversibleBlock:(FJValueTransformBlock)reversibleBlock userInfo:(NSDictionary *)userInfo {
+    NSParameterAssert(reversibleBlock != nil);
     return [[FJReversibleValueTransformer alloc] initWithForwardBlock:nil reverseBlock:reversibleBlock userInfo:userInfo];
 }
 
 + (instancetype)transformerUsingForwardBlock:(FJValueTransformBlock)forwardBlock reverseBlock:(FJValueTransformBlock)reverseBlock userInfo:(NSDictionary *)userInfo {
+    NSParameterAssert(reverseBlock != nil);
+    NSParameterAssert(forwardBlock != nil);
     return [[FJReversibleValueTransformer alloc] initWithForwardBlock:forwardBlock reverseBlock:reverseBlock userInfo:userInfo];
 }
 
 - (id)initWithForwardBlock:(nullable FJValueTransformBlock)forwardBlock reverseBlock:(nullable FJValueTransformBlock)reverseBlock userInfo:(NSDictionary *)userInfo {
-    NSParameterAssert(forwardBlock != nil);
-    
     self = [super init];
     if (self == nil) return nil;
     
