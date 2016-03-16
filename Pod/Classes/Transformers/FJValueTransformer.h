@@ -9,13 +9,19 @@
 #import <Foundation/Foundation.h>
 
 typedef id (^FJValueTransformerBlock)(id value, BOOL *success, NSError **error);
+typedef id (^FJValueTransformBlock)(id value, NSDictionary *userInfo, NSError **error);
 
 @interface FJValueTransformer : NSValueTransformer
 
-+ (instancetype)transformerUsingForwardBlock:(FJValueTransformerBlock)transformation;
+@property (nonatomic, strong, readonly) NSDictionary *userInfo;
 
-+ (instancetype)transformerUsingReversibleBlock:(FJValueTransformerBlock)transformation;
++ (instancetype)transformerUsingForwardBlock:(FJValueTransformerBlock)transformation  __attribute__ ((deprecated));
++ (instancetype)transformerUsingForwardBlock:(FJValueTransformBlock)transformation userInfo:(NSDictionary *)userInfo;
 
-+ (instancetype)transformerUsingForwardBlock:(FJValueTransformerBlock)forwardTransformation reverseBlock:(FJValueTransformerBlock)reverseTransformation;
++ (instancetype)transformerUsingReversibleBlock:(FJValueTransformerBlock)transformation  __attribute__ ((deprecated));
++ (instancetype)transformerUsingReversibleBlock:(FJValueTransformBlock)transformation userInfo:(NSDictionary *)userInfo;
+
++ (instancetype)transformerUsingForwardBlock:(FJValueTransformerBlock)forwardTransformation reverseBlock:(FJValueTransformerBlock)reverseTransformation  __attribute__ ((deprecated));
++ (instancetype)transformerUsingForwardBlock:(FJValueTransformBlock)forwardTransformation reverseBlock:(FJValueTransformBlock)reverseTransformation userInfo:(NSDictionary *)userInfo;
 
 @end
