@@ -48,7 +48,7 @@
     if (self == nil) return nil;
     
     _forwardTransformBlock = [forwardBlock copy];
-    _forwardTransformBlock = [reverseBlock copy];
+    _reverseTransformBlock = [reverseBlock copy];
     self.userInfo = userInfo;
     
     return self;
