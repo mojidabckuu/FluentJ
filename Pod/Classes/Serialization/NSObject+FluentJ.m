@@ -170,7 +170,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
     
     for(id valueToExport in valuesToExport) {
         Class exportClass = [valueToExport class];
-        NSDictionary *json = [[self class] transformExportValues:valueToExport exportClass:exportClass userInfo:userInfo error:error];
+        NSDictionary *json = [exportClass transformExportValues:valueToExport exportClass:exportClass userInfo:userInfo error:error];
         if(!*error) {
             [jsonValues addObject:json];
         }
