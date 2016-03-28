@@ -74,7 +74,7 @@
         // copy the type string
         self.type = calloc(sizeof(char), typeLength);
         strncpy(self.type, typeString, typeLength);
-        self.type[typeLength] = '\0';
+        self.type[typeLength - 1] = '\0';
     
         
         // if this is an object type, and immediately followed by a quoted string...
