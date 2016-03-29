@@ -43,6 +43,7 @@ NSString *const FJModelValueTransformerKey = @"FJModelValueTransformer";
         if(!value) return nil;
         if([value isKindOfClass:NSString.class]) {
             NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            formatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
             formatter.numberStyle = NSNumberFormatterDecimalStyle;
             NSNumber *number = [formatter numberFromString:value];
             return number;
