@@ -23,7 +23,7 @@
 /**
  Update Model using JSON
  */
-- (void)updateWithValue:(nullable id)values context:(nullable id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
+- (void)updateWithValue:(nullable NSDictionary<NSString *, id> *)values context:(nullable id)context userInfo:(nullable NSDictionary *)userInfo error:(NSError *__nullable __autoreleasing *__nullable)error;
 
 /**
  Convert Model -> JSON

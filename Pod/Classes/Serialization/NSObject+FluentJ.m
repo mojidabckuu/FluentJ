@@ -72,7 +72,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
 
 #pragma mark - Update
 
-- (void)updateWithValue:(id)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
+- (void)updateWithValue:(NSDictionary<NSString *, id> *)values context:(id)context userInfo:(NSDictionary *)userInfo error:(NSError **)error {
     if(!values) {
         return;
     }
