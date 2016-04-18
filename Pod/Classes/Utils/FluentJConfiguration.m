@@ -30,6 +30,7 @@
         self.simpleClasses = [NSMutableArray array];
         self.excludeExportNullValues = YES;
         self.managedBndings = [NSMutableDictionary dictionary];
+        self.omitEmptyObjects = YES;
     }
     return self;
 }

@@ -16,6 +16,10 @@
 @property (nonatomic, strong) NSMutableArray *simpleClasses;
 @property (nonatomic, assign) BOOL excludeExportNullValues;
 
+// if related object is {} or [] then it will not be treated
+// Default is YES
+@property (nonatomic, assign) BOOL omitEmptyObjects;
+
 
 // Swift supports nested classes. Their names are encoded.
 // When FluentJ transforms object -> model or model -> object it will try to lookup

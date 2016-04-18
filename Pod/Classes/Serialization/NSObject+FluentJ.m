@@ -287,7 +287,10 @@ NSString *const APIObjectKey = @"APIObjectKey";
         }
         
         if(exportedValue) {
-            [json setObject:exportedValue forKey:key];
+            BOOL omit = [FluentJConfiguration sharedInstance].omitEmptyObjects;
+            if((omit && [exportedValue count]) || !omit) {
+                [json setObject:exportedValue forKey:key];
+            }
         }
         propertyDescriptor.bindingKey = nil;
     }
