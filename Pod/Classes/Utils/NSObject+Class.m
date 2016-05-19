@@ -22,7 +22,7 @@ BOOL FJSimpleClass(Class class) {
             return TRUE;
         }
     }
-    return !custom;
+    return custom;
 }
 
 @implementation NSObject (Class)
