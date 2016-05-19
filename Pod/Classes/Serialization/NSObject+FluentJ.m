@@ -29,6 +29,44 @@
 
 NSString *const APIObjectKey = @"APIObjectKey";
 
+@interface NSObject(Empty)
+
+- (BOOL)isEmpty;
+
+@end
+
+@implementation NSObject(Empty)
+
+- (BOOL)isEmpty {
+    return false;
+}
+
+@end
+
+@implementation NSArray(Empty)
+
+- (BOOL)isEqual:(id)object {
+    return self.count == 0;
+}
+
+@end
+
+@implementation NSDictionary(Empty)
+
+- (BOOL)isEmpty {
+    return self.count == 0;
+}
+
+@end
+
+@implementation NSString(Empty)
+
+- (BOOL)isEmpty {
+    return self.length == 0;
+}
+
+@end
+
 @implementation NSObject (FluentJ)
 
 #pragma mark - Import
@@ -287,16 +325,16 @@ NSString *const APIObjectKey = @"APIObjectKey";
         }
         
         if(exportedValue) {
-            [json setObject:exportedValue forKey:key];
+            BOOL omit = [FluentJConfiguration sharedInstance].omitEmptyObjects;
+            if(omit && ![exportedValue isEmpty]) {
+                [json setObject:exportedValue forKey:key];
+            } else {
+                [json setObject:exportedValue forKey:key];
+            }
         }
         propertyDescriptor.bindingKey = nil;
     }
-    BOOL omit = [FluentJConfiguration sharedInstance].omitEmptyObjects;
-    if((omit && [json count]) || !omit) {
-        return json;
-    }
-    return nil;
-    
+    return json;    
 }
 
 @end
