@@ -12,10 +12,10 @@
 #import "FluentJConfiguration.h"
 
 BOOL FJSimpleClass(Class class) {
-    BOOL custom = [class customClass];
+    BOOL custom = class ? [class customClass] : YES;
     if(!custom) {
         NSString *classString = NSStringFromClass(class);
-        if([classString hasPrefix:@"NS"] || [classString hasPrefix:@"UI"]) {
+        if([classString containsString:@"NS"] || [classString containsString:@"UI"]) {
             return TRUE;
         }
         if([[[FluentJConfiguration sharedInstance] simpleClasses] containsObject:class]) {
