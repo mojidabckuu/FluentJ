@@ -45,7 +45,7 @@ NSString *const APIObjectKey = @"APIObjectKey";
 
 @implementation NSArray(Empty)
 
-- (BOOL)isEqual:(id)object {
+- (BOOL)isEmpty {
     return self.count == 0;
 }
 
