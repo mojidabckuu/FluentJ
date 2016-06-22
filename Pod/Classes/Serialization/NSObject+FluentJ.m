@@ -104,7 +104,9 @@ NSString *const APIObjectKey = @"APIObjectKey";
         return nil;
     }
     id item = [[[self class] alloc] init];
+    [self willImportWithUserInfo:userInfo];
     [item updateWithValue:value context:context userInfo:userInfo error:error];
+    [self didImportWithUserInfo:userInfo];
     return item;
 }
 
@@ -123,7 +125,6 @@ NSString *const APIObjectKey = @"APIObjectKey";
         keys = [[self class] keysWithProperties:properties];
     }
     NSArray *allKeys = [keys allKeys];
-    [self willImportWithUserInfo:userInfo];
     for(FJPropertyDescriptor *propertyDescriptor in properties) {
         NSString *propertyName = propertyDescriptor.name;
         if(![allKeys containsObject:propertyName]) {
@@ -179,7 +180,6 @@ NSString *const APIObjectKey = @"APIObjectKey";
             [self setValue:value forKey:propertyName];
         }
     }
-    [self didImportWithUserInfo:userInfo];
 }
 
 #pragma mark - Export
