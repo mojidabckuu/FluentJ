@@ -104,9 +104,9 @@ NSString *const APIObjectKey = @"APIObjectKey";
         return nil;
     }
     id item = [[[self class] alloc] init];
-    [self willImportWithUserInfo:userInfo];
+    [item willImportWithUserInfo:userInfo];
     [item updateWithValue:value context:context userInfo:userInfo error:error];
-    [self didImportWithUserInfo:userInfo];
+    [item didImportWithUserInfo:userInfo];
     return item;
 }
 
