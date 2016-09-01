@@ -9,6 +9,7 @@
 #import "NSObject+FluentJ.h"
 
 #import "NSObject+Properties.h"
+#import "NSObject+Definition.h"
 
 #import "FJPropertyDescriptor.h"
 
@@ -185,6 +186,9 @@ NSString *const APIObjectKey = @"APIObjectKey";
 #pragma mark - Export
 
 - (id)exportWithUserInfo:(NSDictionary *)userInfo error:(NSError **)error {
+    if([self isKindOfClass:[NSString class]] || [self isKindOfClass:[NSNumber class]]) {
+        return self;
+    }
     NSArray *valuesToExport = nil;
     BOOL isCollection = [self conformsToProtocol:@protocol(NSFastEnumeration)];
     if(isCollection) {
